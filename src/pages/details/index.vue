@@ -72,10 +72,21 @@
     onLoad(opt) {
       this.query = opt
       this.audio = uni.createInnerAudioContext()
-      this.list = Thesaurus[opt.type].split(',')
+      this.list = Thesaurus[this.query.type].split(',')
+      console.log(this.list.length)
+      if (this.query.index) {
+        this.index = +this.query.index
+      }
       this.word = this.list[this.index]
       if (opt.type === 'one') {
         this.onPlay()
+      }
+    },
+    onShareAppMessage() {
+      return {
+        imageUrl: '/static/images/144x144.png',
+        title: '我正在学认字',
+        path: `/pages/details/index?type=${this.query.type}&index=${this.index}`
       }
     },
     methods: {

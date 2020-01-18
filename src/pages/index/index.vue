@@ -32,6 +32,14 @@
     onLoad() {
 
     },
+
+    onShareAppMessage() {
+      return {
+        imageUrl: '/static/images/144x144.png',
+        title: '一起来学认字',
+        path: '/pages/index/index'
+      }
+    },
     methods: {
       onNavigateTo(type) {
         uni.navigateTo({
