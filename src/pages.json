@@ -5,7 +5,11 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
-    "navigationBarBackgroundColor": "#FF2025",
-    "backgroundColor": "#f8f8f8"
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#FFF",
+    "navigationStyle": "custom",
+    "enablePullDownRefresh": false,
+    "transparentTitle": "always",
+    "titlePenetrate": "YES"
 	}
 }

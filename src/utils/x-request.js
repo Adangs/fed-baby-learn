@@ -1,12 +1,10 @@
 import config from '../config'
-import store from '../store'
 
 export default (options = {}) => {
   options = Object.assign({ method: 'GET', data: {}, error: true }, options)
   if (config.LOG) {
     console.info(`${new Date().toLocaleString()}【 API=${config.API + options.url} 】DATA=${JSON.stringify(options.data)}`)
   }
-  // console.log('store', store.state)
   return new Promise((resolve, reject) => {
     uni.request({
       url: config.API + options.url,
@@ -15,10 +13,6 @@ export default (options = {}) => {
         channel: process.env.VUE_APP_PLATFORM
       }, options.data),
       method: options.method.toUpperCase(),
-      header: {
-        'oauth-type': config.platform[process.env.VUE_APP_PLATFORM].type, // 平台类型
-        'token': store.state.user.token // token
-      },
       success: (res) => {
         const { statusCode, data } = res
         if (statusCode >= 200 && statusCode < 300) {
