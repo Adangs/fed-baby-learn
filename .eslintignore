@@ -1,0 +1,10 @@
+.git/
+.idea/
+.vscode/
+dist/
+src/unpackage
+node_modules/
+src/libs/
+package.json
+regenerator-runtime.js
+gulpfile.js

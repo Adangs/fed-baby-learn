@@ -1,0 +1,47 @@
+{
+  "name" : "",
+  "appid" : "",
+  "description" : "",
+  "versionName" : "1.0.0",
+  "versionCode" : "100",
+  "transformPx" : true,
+  "uniStatistics" : {
+    "enable" : true
+  },
+  "mp-weixin" : {
+    "appid" : "",
+    "setting" : {
+      "urlCheck" : false,
+      "es6" : true,
+      "postcss" : true,
+      "minified" : true
+    },
+    "usingComponents" : true
+  },
+  "mp-alipay" : {
+    "appid" : "",
+    "usingComponents" : true
+  },
+  "mp-baidu" : {
+    "appid" : "",
+    "usingComponents" : true
+  },
+  "mp-toutiao" : {
+    "appid" : "",
+    "setting" : {
+      "urlCheck" : false,
+      "es6" : true,
+      "postcss" : true,
+      "minified" : true
+    },
+    "usingComponents" : true
+  },
+  "mp-qq" : {
+    "setting" : {
+      "es6" : true,
+      "postcss" : true,
+      "minified" : true,
+      "urlCheck" : false
+    }
+  }
+}

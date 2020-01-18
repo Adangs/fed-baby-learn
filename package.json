@@ -1,0 +1,22 @@
+{
+    "name": "fed-baby-learn",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "eslint": "eslint src --ext .js",
+        "fix": "eslint src --ext .js --fix"
+    },
+    "pre-commit": [
+        "fix"
+    ],
+    "author": "Adang",
+    "license": "ISC",
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint": "^6.6.0",
+        "gulp": "^4.0.2",
+        "gulp-oss-sync": "^1.0.4",
+        "gulp-util": "^3.0.8"
+    }
+}

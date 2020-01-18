@@ -1,0 +1,86 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+
+/* CDN URL */
+$uni-cdn-url: 'https://img.alicdn.com/static/assets';
+@function cdn($url){
+  @return url($uni-cdn-url + $url)
+}
+
+/* 颜色变量 */
+$uni-color-white: #fff;
+$uni-color-default: #333333;
+$uni-color-primary: #FF1D24;
+$uni-color-secondary: #FF613C;
+$uni-color-warning: #FFA340;
+$uni-color-success: #129B00;
+$uni-color-error: #dd524d;
+
+/* 弱色 */
+$uni-color-primary-light-1: mix($uni-color-white, $uni-color-primary, 10%);
+$uni-color-primary-light-2: mix($uni-color-white, $uni-color-primary, 20%);
+$uni-color-primary-light-3: mix($uni-color-white, $uni-color-primary, 30%);
+$uni-color-primary-light-4: mix($uni-color-white, $uni-color-primary, 40%);
+$uni-color-primary-light-5: mix($uni-color-white, $uni-color-primary, 50%);
+$uni-color-primary-light-6: mix($uni-color-white, $uni-color-primary, 50%);
+$uni-color-primary-light-7: mix($uni-color-white, $uni-color-primary, 60%);
+$uni-color-primary-light-8: mix($uni-color-white, $uni-color-primary, 70%);
+$uni-color-primary-light-9: mix($uni-color-white, $uni-color-primary, 90%);
+
+$uni-color-warning-light-1: mix($uni-color-white, $uni-color-secondary, 10%);
+$uni-color-warning-light-2: mix($uni-color-white, $uni-color-secondary, 20%);
+$uni-color-warning-light-3: mix($uni-color-white, $uni-color-secondary, 30%);
+$uni-color-warning-light-4: mix($uni-color-white, $uni-color-secondary, 30%);
+$uni-color-warning-light-5: mix($uni-color-white, $uni-color-secondary, 50%);
+$uni-color-warning-light-6: mix($uni-color-white, $uni-color-secondary, 60%);
+$uni-color-warning-light-7: mix($uni-color-white, $uni-color-secondary, 70%);
+$uni-color-warning-light-8: mix($uni-color-white, $uni-color-secondary, 80%);
+$uni-color-warning-light-9: mix($uni-color-white, $uni-color-secondary, 90%);
+
+/* 文字基本颜色 */
+$uni-text-color: #333;//基本色
+$uni-text-color-inverse: #fff;//反色
+$uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息
+$uni-text-color-placeholder: #666;
+$uni-text-color-disable: #c0c0c0;
+
+/* 背景颜色 */
+$uni-bg-color: #ffffff;
+$uni-bg-color-grey: #f8f8f8;
+$uni-bg-color-hover: #f1f1f1;//点击状态颜色
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4);//遮罩颜色
+$uni-bg-color-active: mix($uni-color-white, $uni-bg-color-grey, 50%);
+
+/* 边框颜色 */
+$uni-border-color: #c8c7cc;
+
+/* 尺寸变量 */
+
+/* 文字尺寸 */
+$uni-font-size-mini: 24px;
+$uni-font-size-sm: 28px;
+$uni-font-size-base: 32px;
+$uni-font-size-lg: 36px;
+
+/* 高度尺寸 */
+$uni-height-size-mini: 40px;
+$uni-height-size-sm: 60px;
+$uni-height-size-base: 80px;
+$uni-height-size-lg: 100px;
+
+/* Border Radius */
+$uni-border-radius-sm: 5px;
+$uni-border-radius-base: 10px;
+$uni-border-radius-lg: 15px;
+$uni-border-radius-circle: 50%;
