@@ -1,31 +1,43 @@
 <template>
   <view class="m-details">
-    <view class="word">
-      <view class="li"></view>
-      <view class="li"></view>
-      <view class="li"></view>
-      <view class="li"></view>
-      <text>{{word}}</text>
-      <view class="icon" @click="onSetRandom">
-        <view class="x-icon">
-          <x-icon :name="isRandom ? 'icon-038' : 'icon-037'" size="60" />
-        </view>
+    <view class="back" :style="'top:' + statusBarHeight + 'px'">
+      <view class="x-icon">
+        <x-icon name="icon-008" size="60" @click="onBack" />
       </view>
     </view>
-    <view class="tools">
-      <view class="content">
-        <view v-if="!isRandom" class="li">
-          <x-icon name="icon-035" size="100" @click="onPrev" />
-        </view>
-        <view class="li">
-          <x-icon name="icon-033" size="100" @click="onPlay" />
-        </view>
-        <view class="li">
-          <x-icon name="icon-034" size="100" @click="onNext" />
+    <block v-if="query.type === 'one'">
+      <view class="word">
+        <view class="li"></view>
+        <view class="li"></view>
+        <view class="li"></view>
+        <view class="li"></view>
+        <text>{{word}}</text>
+        <view class="icon" @click="onSetRandom">
+          <view class="x-icon">
+            <x-icon :name="isRandom ? 'icon-038' : 'icon-037'" size="60" />
+          </view>
         </view>
       </view>
-    </view>
-    <view class="tips">音频来源百度翻译</view>
+      <view class="tools">
+        <view class="content">
+          <view v-if="!isRandom" class="li">
+            <x-icon name="icon-035" size="100" @click="onPrev" />
+          </view>
+          <view class="li">
+            <x-icon name="icon-033" size="100" @click="onPlay" />
+          </view>
+          <view class="li">
+            <x-icon name="icon-034" size="100" @click="onNext" />
+          </view>
+        </view>
+      </view>
+      <view class="tips">音频来源百度翻译</view>
+    </block>
+    <block v-else>
+      <view class="x-empty">
+        <text>敬请期待~</text>
+      </view>
+    </block>
   </view>
 </template>
 
@@ -41,6 +53,8 @@
     props: {},
     data() {
       return {
+        query: {},
+        statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
         index: uni.getStorageSync('storage-orderly-index') || 0,
         list: null,
         history: [],
@@ -55,15 +69,18 @@
       }
     },
     watch: {},
-    onLoad() {
+    onLoad(opt) {
+      this.query = opt
       this.audio = wx.createInnerAudioContext()
-      this.list = Thesaurus.one.split(',')
+      this.list = Thesaurus[opt.type].split(',')
       this.word = this.list[this.index]
-      this.onPlay()
+      if (opt.type === 'one') {
+        this.onPlay()
+      }
     },
     methods: {
       onPlay() {
-        console.log(this.word)
+        // console.log(this.word)
         this.audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${decodeURIComponent(this.word)}&spd=5&source=web`
         // this.audio.src = `http://tts.youdao.com/fanyivoice?word=${decodeURIComponent(text)}&le=eng&keyfrom=speaker-target`
         this.audio.play()
@@ -83,7 +100,8 @@
       onNext() {
         if (this.isRandom) {
           // 随机
-
+          this.index = Math.floor(Math.random() * this.list.length)
+          this.word = this.list[this.index]
         } else {
           let index = Number(this.index) + 1
           if (index >= this.list.length) {
@@ -102,6 +120,11 @@
       onSetRandom() {
         this.isRandom = !this.isRandom
         uni.setStorageSync('storage-is-random', this.isRandom)
+      },
+      onBack() {
+        uni.navigateBack({
+          delta: 1
+        })
       }
     }
   };
@@ -110,6 +133,11 @@
 <style lang="scss">
   .m-details{
     position: absolute; width: 100%; height: 100%; left: 0; top: 0;
+    .back{
+      height: 100px; width: 100px; position: absolute; left: 0; display: flex; align-items: center; z-index: 99;
+      .x-icon{ flex: 1; text-align: center;}
+
+    }
     .word{
       width: 100%; height: 100vw; position: relative;
       .icon{
@@ -161,5 +189,9 @@
       }
     }
     .tips{ position: absolute; bottom: 20px; color: #eee; width: 100%; text-align: center; font-size: 22px;}
+    .x-empty{
+      position: absolute; width: 100%; height: 100%;
+      text{ position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); font-size: 50px; color: #999;}
+    }
   }
 </style>
