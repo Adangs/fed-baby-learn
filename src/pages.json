@@ -1,5 +1,7 @@
 {
 	"pages": [{
+    "path": "pages/details/index"
+  }, {
     "path": "pages/index/index"
   }],
 	"globalStyle": {
