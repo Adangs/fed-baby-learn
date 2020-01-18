@@ -12,9 +12,16 @@
         <view class="li"></view>
         <view class="li"></view>
         <text>{{word}}</text>
+        <!--切换-->
         <view class="icon" @click="onSetRandom">
           <view class="x-icon">
             <x-icon :name="isRandom ? 'icon-038' : 'icon-037'" size="60" />
+          </view>
+        </view>
+        <!--重置-->
+        <view class="icon refresh" @click="onRefresh">
+          <view class="x-icon">
+            <x-icon name="icon-013" size="50" />
           </view>
         </view>
       </view>
@@ -135,6 +142,15 @@
         uni.navigateBack({
           delta: 1
         })
+      },
+      onRefresh() {
+        this.index = 0
+        this.word = this.list[this.index]
+        this.onPlay()
+        uni.setStorageSync('storage-orderly-index', this.index)
+        uni.showToast({
+          title: '重置成功'
+        })
       }
     }
   };
@@ -152,6 +168,7 @@
       width: 100%; height: 100vw; position: relative;
       .icon{
         position: absolute; width: 100px; height: 100px; bottom: 0; right: 0; text-align: center; display: flex; align-items: center;
+        &.refresh{ right: auto; left: 0;}
         .x-icon{ width: 100%;}
       }
       .li{
