@@ -78,15 +78,6 @@
     watch: {},
     onLoad(opt) {
       this.query = opt
-      this.audio = uni.createInnerAudioContext()
-      this.audio.autoplay = true
-      // this.audio.onPlay((res) => {
-      //   console.log('onPlay -> ', res)
-      // })
-      this.audio.onError((err) => {
-        console.log('onError -> ', err)
-      })
-
       this.list = Thesaurus[this.query.type].split(',')
       // console.log(this.list.length)
       if (this.query.index) {
@@ -106,10 +97,18 @@
     },
     methods: {
       onPlay() {
-        // console.log(this.word)
-        this.audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${encodeURIComponent(this.word)}&spd=5&source=wise`
+        const audio = uni.createInnerAudioContext()
+        audio.autoplay = true
+        audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${encodeURIComponent(this.word)}&spd=5&source=wise`
         // this.audio.src = `http://tts.youdao.com/fanyivoice?word=${decodeURIComponent(text)}&le=eng&keyfrom=speaker-target`
-        this.audio.play()
+        console.log('url -> ', audio.src)
+        // audio.onError((err) => {
+        //   console.log('onError -> ', err)
+        // })
+        // audio.onPlay((res) => {
+        //   console.log('onPlay -> ', res)
+        // })
+        audio.play()
       },
       // 上一个
       onPrev() {
