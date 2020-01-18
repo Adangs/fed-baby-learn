@@ -79,8 +79,16 @@
     onLoad(opt) {
       this.query = opt
       this.audio = uni.createInnerAudioContext()
+      this.audio.autoplay = true
+      this.audio.onPlay((res) => {
+        console.log('onPlay -> ', res)
+      })
+      this.audio.onError((err) => {
+        console.log('onError -> ', err)
+      })
+
       this.list = Thesaurus[this.query.type].split(',')
-      console.log(this.list.length)
+      // console.log(this.list.length)
       if (this.query.index) {
         this.index = +this.query.index
       }
@@ -99,7 +107,7 @@
     methods: {
       onPlay() {
         // console.log(this.word)
-        this.audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${decodeURIComponent(this.word)}&spd=5&source=web`
+        this.audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${decodeURIComponent(this.word)}&spd=5&source=wise`
         // this.audio.src = `http://tts.youdao.com/fanyivoice?word=${decodeURIComponent(text)}&le=eng&keyfrom=speaker-target`
         this.audio.play()
       },
