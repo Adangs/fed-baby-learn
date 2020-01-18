@@ -44,7 +44,9 @@
     methods: {
       onPlay() {
         const text = '永'
-        this.audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${decodeURIComponent(text)}&spd=5&source=web`
+        // this.audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${decodeURIComponent(text)}&spd=5&source=web`
+        this.audio.src = `https://translate.google.cn/translate_tts?ie=UTF-8&q=${decodeURIComponent(text)}&tl=zh-CN&total=1&idx=0&textlen=1&tk=597330.1027169&client=webapp`
+        // this.audio.src = `http://tts.youdao.com/fanyivoice?word=${decodeURIComponent(text)}&le=eng&keyfrom=speaker-target`
         this.audio.play()
       }
     }
