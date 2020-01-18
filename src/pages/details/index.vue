@@ -71,7 +71,7 @@
     watch: {},
     onLoad(opt) {
       this.query = opt
-      this.audio = wx.createInnerAudioContext()
+      this.audio = uni.createInnerAudioContext()
       this.list = Thesaurus[opt.type].split(',')
       this.word = this.list[this.index]
       if (opt.type === 'one') {
@@ -113,12 +113,11 @@
         }
         this.onPlay()
       },
-      random() {
-        const index = Math.floor(Math.random() * (this.list.length + 1))
-        const word = this.list[index]
-      },
       onSetRandom() {
         this.isRandom = !this.isRandom
+        uni.showToast({
+          title: this.isRandom ? '随机播放' : '顺序播放'
+        })
         uni.setStorageSync('storage-is-random', this.isRandom)
       },
       onBack() {
