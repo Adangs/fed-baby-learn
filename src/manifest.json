@@ -11,7 +11,7 @@
   "mp-weixin" : {
     "appid" : "wxe909acd671d1a5a1",
     "setting" : {
-      "libVersion": "2.10.1",
+      "libVersion" : "2.10.1",
       "urlCheck" : false,
       "es6" : true,
       "postcss" : true,
@@ -43,6 +43,25 @@
       "postcss" : true,
       "minified" : true,
       "urlCheck" : false
+    }
+  },
+  "app-plus" : {
+    "distribute" : {
+      "icons" : {
+        "ios" : {
+          "ipad" : {
+            "app" : "assets/images/76x76.png",
+            "app@2x" : "assets/images/152x152.png",
+            "proapp@2x" : "assets/images/167x167.png",
+            "spotlight" : "assets/images/40x40.png",
+            "spotlight@2x" : "assets/images/80x80.png",
+            "settings" : "assets/images/29x29.png",
+            "settings@2x" : "assets/images/58x58.png",
+            "notification" : "assets/images/20x20.png",
+            "notification@2x" : "assets/images/40x40.png"
+          }
+        }
+      }
     }
   }
 }
