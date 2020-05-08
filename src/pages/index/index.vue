@@ -30,7 +30,7 @@
     computed: {},
     watch: {},
     onLoad() {
-
+      this.getExtConfig()
     },
 
     onShareAppMessage() {
@@ -45,6 +45,10 @@
         uni.navigateTo({
           url: `/pages/details/index?type=${type}`
         })
+      },
+      getExtConfig() {
+        let extConfig = uni.getExtConfigSync? uni.getExtConfigSync(): {}
+        console.log('getExtConfig--> ', extConfig)
       }
     }
   };
