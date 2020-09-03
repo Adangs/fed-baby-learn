@@ -40,6 +40,15 @@
         path: '/pages/index/index'
       }
     },
+
+    // 本接口为 Beta 版本，暂只在 Android 平台支持
+    onShareTimeline() {
+      return {
+        title: '一起来学习',
+        imageUrl: '/static/images/144x144.png'
+      }
+    },
+
     methods: {
       onLiteracy() {
         uni.navigateTo({

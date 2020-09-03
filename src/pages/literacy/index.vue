@@ -95,6 +95,14 @@
         path: `/pages/literacy/index?type=${this.query.type}&index=${this.index}`
       }
     },
+
+    // 本接口为 Beta 版本，暂只在 Android 平台支持
+    onShareTimeline() {
+      return {
+        imageUrl: '/static/images/144x144.png',
+        title: '我正在学认字',
+      }
+    },
     methods: {
       onPlay() {
         const audio = uni.createInnerAudioContext()

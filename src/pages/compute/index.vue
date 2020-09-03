@@ -143,6 +143,14 @@
         path: '/pages/compute/index'
       }
     },
+
+    // 本接口为 Beta 版本，暂只在 Android 平台支持
+    onShareTimeline() {
+      return {
+        title: '我正在学算数',
+        imageUrl: '/static/images/144x144.png'
+      }
+    },
     methods: {
       onRefresh() {
         // 重置
