@@ -1,19 +1,17 @@
 <template>
-  <form report-submit @submit="onSubmit" @reset="onReset">
-    <button
-      hover-class="none"
-      :class="classNameList"
-      :plain="plain"
-      :disabled="disabled || loading"
-      :loading="loading"
-      :scope="scope"
-      :open-type="openType"
-      :form-type="formType"
-      @click="onClick"
-    >
-      <slot />
-    </button>
-  </form>
+  <button
+    hover-class="none"
+    :class="classNameList"
+    :plain="plain"
+    :disabled="disabled || loading"
+    :loading="loading"
+    :scope="scope"
+    :open-type="openType"
+    :form-type="formType"
+    @click="onClick"
+  >
+    <slot />
+  </button>
 </template>
 
 <script>
@@ -92,25 +90,7 @@
     },
     methods: {
       onClick() {
-        console.log('click')
         this.$emit('click')
-      },
-      onSubmit({ detail }) {
-        const { formId } = detail
-        console.log('formId-> ', formId)
-        if (formId === 'the formId is a mock one') return
-        this.$http({
-          method: 'post',
-          error: false,
-          url: '/mall/form/save',
-          data: {
-            formId
-          }
-        })
-        this.$emit('submit')
-      },
-      onReset() {
-        this.$emit('reset')
       }
     }
   };
