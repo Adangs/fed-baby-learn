@@ -11,33 +11,38 @@
       <view class="li"></view>
       <view class="li"></view>
       <view class="topic">
-        <view class="topic-a">10</view>
+        <view class="topic-a">100</view>
         <view class="symbol">+</view>
-        <view class="topic-b">10</view>
+        <view class="topic-b">100</view>
         <view class="symbol">=</view>
-        <view class="answer">({{ answer || '' }})</view>
       </view>
       <!--数量-->
       <view class="count">
-        10/100
+        {{ count.start }}/{{ count.end }}
       </view>
       <!--切换-->
-      <view class="icon refresh" @click="onSwitch">
+      <view class="icon refresh">
         <view class="x-icon">
-          <x-icon name="icon-019" size="50" />
+          <picker :value="rangeIndex" :range="range" range-key="name" @change="onChangePicker">
+            <x-icon name="icon-019" size="50" />
+          </picker>
+          <view class="name">{{max}}以内</view>
         </view>
       </view>
       <!--换题-->
       <view class="icon" @click="onRefresh">
         <view class="x-icon">
           <x-icon name="icon-013" size="60" />
+          <view class="name">重置</view>
         </view>
       </view>
     </view>
     <!--结果列表-->
     <view class="result">
-      <view v-for="item in 101" :key="item" class="li">
-        <view class="item">{{ item }}</view>
+      <view class="ul">
+        <view v-for="item in maxResult" :key="item" class="li">
+          <view class="item">{{ item }}</view>
+        </view>
       </view>
     </view>
   </view>
@@ -56,17 +61,37 @@
       return {
         query: {},
         statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
-        index: uni.getStorageSync('storage-orderly-index') || 0,
+        range: [{
+          value: 10,
+          name: '10以内加减法'
+        }, {
+          value: 20,
+          name: '20以内加减法'
+        }, {
+          value: 30,
+          name: '30以内加减法'
+        }, {
+          value: 50,
+          name: '50以内加减法'
+        }, {
+          value: 100,
+          name: '100以内加减法'
+        }],
+        max: uni.getStorageSync('storage-compute-max') || 10,
+        count: {
+          start: 1,
+          end: 100
+        },
         list: null,
-        history: [],
-        audio: null,
-        answer: null,
-        isRandom: uni.getStorageSync('storage-is-random') || false
+        history: []
       }
     },
     computed: {
-      isDisabled() {
-        return this.index === 0 && !this.isRandom
+      maxResult() {
+        return +this.max + 1
+      },
+      rangeIndex() {
+        return this.range.findIndex(item => item.value === +this.max)
       }
     },
     watch: {},
@@ -76,50 +101,32 @@
     onShareAppMessage() {
       return {
         imageUrl: '/static/images/144x144.png',
-        title: '我正在学认字',
-        path: `/pages/details/index?type=${this.query.type}&index=${this.index}`
+        title: '我正在学算数',
+        path: '/pages/compute/index'
       }
     },
     methods: {
-      onPlay() {
-        const audio = uni.createInnerAudioContext()
-        audio.autoplay = true
-        audio.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${encodeURIComponent(this.word)}&spd=5&source=wise`
-        // this.audio.src = `http://tts.youdao.com/fanyivoice?word=${decodeURIComponent(text)}&le=eng&keyfrom=speaker-target`
-        console.log('url -> ', audio.src)
-        // audio.onError((err) => {
-        //   console.log('onError -> ', err)
-        // })
-        // audio.onPlay((res) => {
-        //   console.log('onPlay -> ', res)
-        // })
-        audio.play()
-      },
-      // 上一个
-      onPrev() {
-        let index = Number(this.index) - 1
-        if (index < 0) {
-          index = this.list.length - 1
-        }
-        this.index = index
-        this.word = this.list[this.index]
-        uni.setStorageSync('storage-orderly-index', this.index)
-        this.onPlay()
-      },
-      // 下一个
-      onNext() {
-        // 跳过，下一题
-      },
       onRefresh() {
         // 重置
+        this.count = {
+          start: 1,
+          end: 100
+        }
       },
       onBack() {
         uni.navigateBack({
           delta: 1
         })
       },
-      onSwitch() {
-
+      // 切换
+      onChangePicker({ detail }) {
+        const find = this.range[detail.value]
+        this.max = find.value
+        uni.setStorageSync('storage-compute-max', this.max)
+        uni.showToast({
+          title: `切换为${find.name}`
+        })
+        console.log(find)
       }
     }
   };
@@ -135,9 +142,10 @@
     .word{
       width: 100%; height: 100vw; position: relative;
       .icon{
-        position: absolute; width: 100px; height: 100px; bottom: 0; right: 0; text-align: center; display: flex; align-items: center;
+        position: absolute; width: 100px; bottom: 20px; right: 0; text-align: center; display: flex; align-items: center;
         &.refresh{ right: auto; left: 0;}
         .x-icon{ width: 100%;}
+        .name{ font-size: 22px; text-align: center; color: #999; padding-top: 5px;}
       }
       .li{
         width: 50%; height: 50%; position: absolute; border: 1px solid #eee; overflow: hidden;
@@ -168,16 +176,19 @@
         }
       }
       .topic{
-        position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; align-items: center; font-size: 100px;
-        .symbol{ padding: 0 10px;}
-        .answer{ color: #129B00;}
+        position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; align-items: center; font-size: 110px;
+        .symbol{ padding: 0 15px;}
       }
-      .count{ position: absolute; width: 100%; bottom: 0; padding: 20px; text-align: center; color: #999;}
+      .count{ position: absolute; width: 100%; bottom: 10px; padding: 20px; text-align: center; color: #999; font-size: 24px;}
     }
     .result{
-      display: flex; align-items: center; flex-wrap: wrap; font-size: 40px; flex: 1; overflow: auto; padding: 10px;
+      font-size: 40px; flex: 1; overflow: auto; padding: 10px;
+      .ul{ display: flex; flex-wrap: wrap; }
       .li{ padding: 10px;}
-      .item{ background-color: #f8f8f8; width: 100px; height: 100px; line-height: 100px; text-align: center;}
+      .item{
+        background-color: #f8f8f8; width: 100px; height: 100px; line-height: 100px; text-align: center;
+        &:active{ background-color: #eee;}
+      }
     }
   }
 </style>
