@@ -41,10 +41,15 @@
     </view>
     <!--结果列表-->
     <view class="result">
+      <view class="first">
+        <view class="item" @click="onAnswer(0)">0</view>
+      </view>
       <view class="ul">
-        <view v-for="item in maxResult" :key="item" class="li">
-          <view class="item" @click="onAnswer(item)">{{ item }}</view>
-        </view>
+        <template v-for="item in maxResult" >
+          <view v-if="item !== 0" :key="item" class="li">
+            <view class="item" @click="onAnswer(item)">{{ item }}</view>
+          </view>
+        </template>
       </view>
     </view>
     <!--完成-->
@@ -304,10 +309,14 @@
     .result{
       font-size: 40px; flex: 1; overflow: auto; padding: 10px;
       .ul{ display: flex; flex-wrap: wrap; }
-      .li{ padding: 10px;}
+      .li{ padding: 10px; width: 20%;}
       .item{
-        background-color: #f8f8f8; width: 100px; height: 100px; line-height: 100px; text-align: center;
+        background-color: #f8f8f8; height: 100px; line-height: 100px; text-align: center;
         &:active{ background-color: #eee;}
+      }
+      .first{
+        padding: 10px;
+        .item{ width: 100%;}
       }
     }
     .finish{
