@@ -4,13 +4,13 @@
       <x-image src="/static/images/144x144.png" />
     </view>
     <view class="li">
-      <view class="item" @click="onNavigateTo('one')">
-        <text>单字</text>
+      <view class="item" @click="onLiteracy">
+        <text>识字</text>
       </view>
     </view>
     <view class="li">
-      <view class="item" @click="onNavigateTo('two')">
-        <text>词语</text>
+      <view class="item" @click="onCompute">
+        <text>数学</text>
       </view>
     </view>
   </view>
@@ -30,25 +30,26 @@
     computed: {},
     watch: {},
     onLoad() {
-      this.getExtConfig()
+
     },
 
     onShareAppMessage() {
       return {
         imageUrl: '/static/images/144x144.png',
-        title: '一起来学认字',
+        title: '一起来学习',
         path: '/pages/index/index'
       }
     },
     methods: {
-      onNavigateTo(type) {
+      onLiteracy() {
         uni.navigateTo({
-          url: `/pages/details/index?type=${type}`
+          url: '/pages/literacy/index?type=one'
         })
       },
-      getExtConfig() {
-        let extConfig = uni.getExtConfigSync? uni.getExtConfigSync(): {}
-        console.log('getExtConfig--> ', extConfig)
+      onCompute() {
+        uni.navigateTo({
+          url: '/pages/compute/index'
+        })
       }
     }
   };

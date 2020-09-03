@@ -5,55 +5,49 @@
         <x-icon name="icon-008" size="60" @click="onBack" />
       </view>
     </view>
-    <block v-if="query.type === 'one'">
-      <view class="word">
-        <view class="li"></view>
-        <view class="li"></view>
-        <view class="li"></view>
-        <view class="li"></view>
-        <text>{{word}}</text>
-        <!--切换-->
-        <view class="icon" @click="onSetRandom">
-          <view class="x-icon">
-            <x-icon :name="isRandom ? 'icon-038' : 'icon-037'" size="60" />
-          </view>
-        </view>
-        <!--重置-->
-        <view class="icon refresh" @click="onRefresh">
-          <view class="x-icon">
-            <x-icon name="icon-013" size="50" />
-          </view>
-        </view>
+    <view class="word">
+      <view class="li"></view>
+      <view class="li"></view>
+      <view class="li"></view>
+      <view class="li"></view>
+      <view class="topic">
+        <view class="topic-a">10</view>
+        <view class="symbol">+</view>
+        <view class="topic-b">10</view>
+        <view class="symbol">=</view>
+        <view class="answer">({{ answer || '' }})</view>
       </view>
-      <view class="tools">
-        <view class="content">
-          <view v-if="!isRandom" class="li">
-            <x-icon name="icon-035" size="100" @click="onPrev" />
-          </view>
-          <view class="li">
-            <x-icon name="icon-033" size="100" @click="onPlay" />
-          </view>
-          <view class="li">
-            <x-icon name="icon-034" size="100" @click="onNext" />
-          </view>
+      <!--数量-->
+      <view class="count">
+        10/100
+      </view>
+      <!--切换-->
+      <view class="icon refresh" @click="onSwitch">
+        <view class="x-icon">
+          <x-icon name="icon-019" size="50" />
         </view>
       </view>
-      <view class="tips">音频来源百度翻译</view>
-    </block>
-    <block v-else>
-      <view class="x-empty">
-        <text>敬请期待~</text>
+      <!--换题-->
+      <view class="icon" @click="onRefresh">
+        <view class="x-icon">
+          <x-icon name="icon-013" size="60" />
+        </view>
       </view>
-    </block>
+    </view>
+    <!--结果列表-->
+    <view class="result">
+      <view v-for="item in 101" :key="item" class="li">
+        <view class="item">{{ item }}</view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import XIcon from '@/components/x-icon'
-  import Thesaurus from '@/thesaurus'
 
   export default {
-    name: 'Details',
+    name: 'Compute',
     components: {
       XIcon
     },
@@ -66,7 +60,7 @@
         list: null,
         history: [],
         audio: null,
-        word: '永',
+        answer: null,
         isRandom: uni.getStorageSync('storage-is-random') || false
       }
     },
@@ -76,17 +70,8 @@
       }
     },
     watch: {},
-    onLoad(opt) {
-      this.query = opt
-      this.list = Thesaurus[this.query.type].split(',')
-      // console.log(this.list.length)
-      if (this.query.index) {
-        this.index = +this.query.index
-      }
-      this.word = this.list[this.index]
-      if (opt.type === 'one') {
-        this.onPlay()
-      }
+    onLoad() {
+
     },
     onShareAppMessage() {
       return {
@@ -123,41 +108,18 @@
       },
       // 下一个
       onNext() {
-        if (this.isRandom) {
-          // 随机
-          this.index = Math.floor(Math.random() * this.list.length)
-          this.word = this.list[this.index]
-        } else {
-          let index = Number(this.index) + 1
-          if (index >= this.list.length) {
-            index = 0
-          }
-          this.index = index
-          this.word = this.list[this.index]
-          uni.setStorageSync('storage-orderly-index', this.index)
-        }
-        this.onPlay()
+        // 跳过，下一题
       },
-      onSetRandom() {
-        this.isRandom = !this.isRandom
-        uni.showToast({
-          title: this.isRandom ? '随机播放' : '顺序播放'
-        })
-        uni.setStorageSync('storage-is-random', this.isRandom)
+      onRefresh() {
+        // 重置
       },
       onBack() {
         uni.navigateBack({
           delta: 1
         })
       },
-      onRefresh() {
-        this.index = 0
-        this.word = this.list[this.index]
-        this.onPlay()
-        uni.setStorageSync('storage-orderly-index', this.index)
-        uni.showToast({
-          title: '重置成功'
-        })
+      onSwitch() {
+
       }
     }
   };
@@ -165,11 +127,10 @@
 
 <style lang="scss">
   .m-details{
-    position: absolute; width: 100%; height: 100%; left: 0; top: 0;
+    position: absolute; width: 100%; height: 100%; left: 0; top: 0; display: flex; flex-direction: column; overflow: hidden;
     .back{
       height: 100px; width: 100px; position: absolute; left: 0; display: flex; align-items: center; z-index: 99;
       .x-icon{ flex: 1; text-align: center;}
-
     }
     .word{
       width: 100%; height: 100vw; position: relative;
@@ -206,26 +167,17 @@
           }
         }
       }
-      text{ position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); font-size: 400px;}
-    }
-    .tools{
-      padding: 50px;
-      .content{
-        display: flex;
-        .li{
-          flex: 1; text-align: center;
-          &.is-disabled{
-            opacity: .3;
-            &:active{ opacity: .3;}
-          }
-          &:active{ opacity: .6;}
-        }
+      .topic{
+        position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; align-items: center; font-size: 100px;
+        .symbol{ padding: 0 10px;}
+        .answer{ color: #129B00;}
       }
+      .count{ position: absolute; width: 100%; bottom: 0; padding: 20px; text-align: center; color: #999;}
     }
-    .tips{ position: absolute; bottom: 20px; color: #eee; width: 100%; text-align: center; font-size: 22px;}
-    .x-empty{
-      position: absolute; width: 100%; height: 100%;
-      text{ position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); font-size: 50px; color: #999;}
+    .result{
+      display: flex; align-items: center; flex-wrap: wrap; font-size: 40px; flex: 1; overflow: auto; padding: 10px;
+      .li{ padding: 10px;}
+      .item{ background-color: #f8f8f8; width: 100px; height: 100px; line-height: 100px; text-align: center;}
     }
   }
 </style>
