@@ -11,9 +11,9 @@
       <view class="li"></view>
       <view class="li"></view>
       <view class="topic">
-        <view class="topic-a">100</view>
-        <view class="symbol">+</view>
-        <view class="topic-b">100</view>
+        <view class="topic-a">{{ current.a }}</view>
+        <view class="symbol">{{ current.sign }}</view>
+        <view class="topic-b">{{ current.b }}</view>
         <view class="symbol">=</view>
       </view>
       <!--数量-->
@@ -82,7 +82,7 @@
           start: 1,
           end: 100
         },
-        list: null,
+        list: [],
         history: []
       }
     },
@@ -92,11 +92,14 @@
       },
       rangeIndex() {
         return this.range.findIndex(item => item.value === +this.max)
+      },
+      current() {
+        return this.list[this.count.start]
       }
     },
     watch: {},
     onLoad() {
-
+      this.onSend()
     },
     onShareAppMessage() {
       return {
@@ -112,6 +115,8 @@
           start: 1,
           end: 100
         }
+        this.list = []
+        this.onSend()
       },
       onBack() {
         uni.navigateBack({
@@ -126,7 +131,33 @@
         uni.showToast({
           title: `切换为${find.name}`
         })
-        console.log(find)
+        this.onRefresh()
+      },
+      // 开始
+      onSend() {
+        const round = Math.round(Math.random())
+        const a = Math.round(Math.random() * this.max)
+        const sign = ['+', '-'][round]
+        let b
+        if (sign === '+') {
+          b = Math.round(Math.random() * (this.max - a))
+        } else {
+          b = Math.round(Math.random() * a)
+        }
+        const item = {
+          a,
+          sign,
+          b
+        }
+        if (this.list.some(s => {
+          return s.a === item.a && s.sign === item.sign && s.b === item.b
+        })) {
+          return this.onSend()
+        }
+        if (this.list.length < this.count.end) {
+          this.list.push(item)
+          return this.onSend()
+        }
       }
     }
   };
