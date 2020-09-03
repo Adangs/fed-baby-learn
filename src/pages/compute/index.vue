@@ -18,7 +18,9 @@
       </view>
       <!--数量-->
       <view class="count">
-        {{ count.start }}/{{ count.end }}
+        <picker :value="endIndex" :range="endList" range-key="name" @change="onChangeEnd">
+          {{ count.start }}/{{ count.end }}
+        </picker>
       </view>
       <!--切换-->
       <view class="icon refresh">
@@ -92,10 +94,24 @@
           value: 100,
           name: '100以内加减法'
         }],
+        endList: [{
+          value: 10,
+          name: '一组10题'
+        }, {
+          value: 30,
+          name: '一组30题'
+        }, {
+          value: 50,
+          name: '一组50题'
+        }, {
+          value: 100,
+          name: '一组100题'
+        }],
         max: uni.getStorageSync('storage-compute-max') || 10,
+        end: uni.getStorageSync('storage-compute-end') || 100,
         count: {
           start: 1,
-          end: 10
+          end: 100
         },
         error: 0,
         list: [],
@@ -109,13 +125,16 @@
       rangeIndex() {
         return this.range.findIndex(item => item.value === +this.max)
       },
+      endIndex() {
+        return this.endList.findIndex(item => item.value === +this.end)
+      },
       current() {
         return this.list[this.count.start]
       }
     },
     watch: {},
     onLoad() {
-      this.onSend()
+      this.onRefresh()
     },
     onShareAppMessage() {
       return {
@@ -130,21 +149,38 @@
         this.error = 0
         this.count = {
           start: 1,
-          end: 100
+          end: this.end
         }
         this.list = []
         this.onSend()
       },
       onBack() {
-        uni.navigateBack({
-          delta: 1
-        })
+        const pages = getCurrentPages();
+        if (pages.length > 1) {
+          uni.navigateBack({
+            delta: 1
+          })
+        } else {
+          uni.redirectTo({
+            url: '/pages/index/index'
+          })
+        }
       },
       // 切换
       onChangePicker({ detail }) {
         const find = this.range[detail.value]
         this.max = find.value
         uni.setStorageSync('storage-compute-max', this.max)
+        uni.showToast({
+          title: `切换为${find.name}`
+        })
+        this.onRefresh()
+      },
+      // 切换题目数
+      onChangeEnd({ detail }) {
+        const find = this.endList[detail.value]
+        this.end = find.value
+        uni.setStorageSync('storage-compute-end', this.end)
         uni.showToast({
           title: `切换为${find.name}`
         })
@@ -166,6 +202,7 @@
           sign,
           b
         }
+        // 去重
         if (this.list.some(s => {
           return s.a === item.a && s.sign === item.sign && s.b === item.b
         })) {
