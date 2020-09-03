@@ -41,7 +41,20 @@
     <view class="result">
       <view class="ul">
         <view v-for="item in maxResult" :key="item" class="li">
-          <view class="item">{{ item }}</view>
+          <view class="item" @click="onAnswer(item)">{{ item }}</view>
+        </view>
+      </view>
+    </view>
+    <!--完成-->
+    <view v-if="count.start === count.end" class="finish">
+      <view class="content">
+        <view class="icon">
+          <x-icon name="icon-027" size="120" />
+        </view>
+        <view class="dt">恭喜您，完成一组</view>
+        <view class="dd">{{ error > 0 ? `答错${error}次` : '全部回答正确'}}</view>
+        <view class="button">
+          <x-button @click="onRefresh">再来一组</x-button>
         </view>
       </view>
     </view>
@@ -50,11 +63,13 @@
 
 <script>
   import XIcon from '@/components/x-icon'
+  import XButton from '@/components/x-button'
 
   export default {
     name: 'Compute',
     components: {
-      XIcon
+      XIcon,
+      XButton
     },
     props: {},
     data() {
@@ -80,8 +95,9 @@
         max: uni.getStorageSync('storage-compute-max') || 10,
         count: {
           start: 1,
-          end: 100
+          end: 10
         },
+        error: 0,
         list: [],
         history: []
       }
@@ -111,6 +127,7 @@
     methods: {
       onRefresh() {
         // 重置
+        this.error = 0
         this.count = {
           start: 1,
           end: 100
@@ -133,7 +150,7 @@
         })
         this.onRefresh()
       },
-      // 开始
+      // 开始生成题目
       onSend() {
         const round = Math.round(Math.random())
         const a = Math.round(Math.random() * this.max)
@@ -157,6 +174,33 @@
         if (this.list.length < this.count.end) {
           this.list.push(item)
           return this.onSend()
+        }
+      },
+      // 答题
+      onAnswer(val) {
+        let answer
+        if (this.current.sign === '+') {
+          answer = this.current.a + this.current.b
+        } else {
+          answer = this.current.a - this.current.b
+        }
+        if (answer === val) {
+          uni.showToast({
+            title: '回答正确',
+            duration: 800
+          })
+          if (this.count.start < this.count.end) {
+            this.count.start++
+          } else {
+
+          }
+        } else {
+          this.error++
+          uni.showToast({
+            icon: 'none',
+            title: '错误，再想想',
+            duration: 800
+          })
         }
       }
     }
@@ -219,6 +263,15 @@
       .item{
         background-color: #f8f8f8; width: 100px; height: 100px; line-height: 100px; text-align: center;
         &:active{ background-color: #eee;}
+      }
+    }
+    .finish{
+      position: absolute; width: 100%; height: 100%; background-color: #fff; display: flex; align-items: center;
+      .content{
+        flex: 1; text-align: center;
+        .dt{ font-size: 40px; padding: 20px 0; color: #000;}
+        .dd{ color: #999;}
+        .button{ width: 300px; margin: 0 auto; padding-top: 100px;}
       }
     }
   }
