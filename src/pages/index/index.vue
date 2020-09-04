@@ -10,7 +10,7 @@
     </view>
     <view class="li">
       <view class="item" @click="onCompute">
-        <text>数学</text>
+        <text>心算</text>
       </view>
     </view>
   </view>

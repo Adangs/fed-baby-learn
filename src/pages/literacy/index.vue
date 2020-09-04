@@ -89,18 +89,20 @@
       }
     },
     onShareAppMessage() {
+      const title = `这个字读【${this.word}】`
       return {
+        title,
         imageUrl: '/static/images/144x144.png',
-        title: '我正在学认字',
         path: `/pages/literacy/index?type=${this.query.type}&index=${this.index}`
       }
     },
 
     // 本接口为 Beta 版本，暂只在 Android 平台支持
     onShareTimeline() {
+      const title = `这个字读【${this.word}】`
       return {
+        title,
         imageUrl: '/static/images/144x144.png',
-        title: '我正在学认字',
       }
     },
     methods: {

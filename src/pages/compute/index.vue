@@ -182,17 +182,19 @@
       this.onRefresh()
     },
     onShareAppMessage() {
+      const title = `心算一下 ${this.current.join('')}=?`
       return {
+        title,
         imageUrl: '/static/images/144x144.png',
-        title: '我正在学算数',
         path: '/pages/compute/index'
       }
     },
 
     // 本接口为 Beta 版本，暂只在 Android 平台支持
     onShareTimeline() {
+      const title = `心算一下 ${this.current.join('')}=?`
       return {
-        title: '我正在学算数',
+        title,
         imageUrl: '/static/images/144x144.png'
       }
     },
