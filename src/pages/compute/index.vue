@@ -11,9 +11,7 @@
       <view class="li"></view>
       <view class="li"></view>
       <view class="topic">
-        <view class="topic-a">{{ current.a }}</view>
-        <view class="symbol">{{ current.sign }}</view>
-        <view class="topic-b">{{ current.b }}</view>
+        <view v-for="(item, index) in current" :key="index" :class="{'symbol': isTypeof(item) === 'string'}">{{ item }}</view>
         <view class="symbol">=</view>
       </view>
       <!--顶部-->
@@ -92,6 +90,7 @@
 <script>
   import XIcon from '@/components/x-icon'
   import XButton from '@/components/x-button'
+  import {Function, evaluate} from '@/libs/eval5.min'
 
   export default {
     name: 'Compute',
@@ -134,17 +133,17 @@
           name: '一组100题'
         }],
         difficulty: [{
-          value: 0,
-          name: 'A(?)B='
-        }, {
-          value: 1,
-          name: 'A(?)B(?)C='
-        }, {
-          value: 2,
-          name: 'A(?)B(?)C(?)D='
-        }, {
           value: 3,
-          name: 'A(?)B(?)C(?)D(?)E='
+          name: 'A ± B ='
+        }, {
+          value: 5,
+          name: 'A ± B ± C ='
+        }, {
+          value: 7,
+          name: 'A ± B ± C ± D ='
+        }, {
+          value: 9,
+          name: 'A ± B ± C ± D ± E ='
         }],
         diff: uni.getStorageSync('storage-compute-diff') || 0,
         max: uni.getStorageSync('storage-compute-max') || 10,
@@ -252,23 +251,11 @@
       },
       // 开始生成题目
       onSend() {
-        const round = Math.round(Math.random())
-        const a = Math.round(Math.random() * this.max)
-        const sign = ['+', '-'][round]
-        let b
-        if (sign === '+') {
-          b = Math.round(Math.random() * (this.max - a))
-        } else {
-          b = Math.round(Math.random() * a)
-        }
-        const item = {
-          a,
-          sign,
-          b
-        }
+        const item = this.getTopic()
         // 去重
+        // console.log(this.list.length)
         if (this.list.some(s => {
-          return s.a === item.a && s.sign === item.sign && s.b === item.b
+          return s.join('') === item.join('')
         })) {
           return this.onSend()
         }
@@ -277,14 +264,43 @@
           return this.onSend()
         }
       },
+      // 生成单个题目
+      getTopic() {
+        const len = this.difficulty[this.diffIndex].value
+        const arr = []
+        for (let i = 0; i < len; i++) {
+          const round = Math.round(Math.random())
+          if (i === 0) {
+            arr.push(this.getNumber())
+          } else {
+            if (i % 2 !== 0) {
+              const sign = ['+', '-'][round]
+              arr.push(sign)
+            } else {
+              let sum
+              if (arr.length % 2 === 0) {
+                sum = evaluate([...arr, 0].join(''))
+              } else {
+                sum = evaluate(arr.join(''))
+              }
+              arr.push(this.getNumber(arr[i - 1], sum))
+            }
+          }
+        }
+        return arr
+      },
+      // 生成单个值
+      getNumber(sign = '+', a = 0) {
+        if (sign === '+') {
+          return Math.round(Math.random() * (this.max - a))
+        } else {
+          return Math.round(Math.random() * a)
+        }
+      },
       // 答题
       onAnswer(val) {
-        let answer
-        if (this.current.sign === '+') {
-          answer = this.current.a + this.current.b
-        } else {
-          answer = this.current.a - this.current.b
-        }
+        const answer = evaluate(this.current.join(''))
+        console.log(answer)
         if (answer === val) {
           uni.showToast({
             title: '回答正确',
@@ -303,6 +319,9 @@
             duration: 800
           })
         }
+      },
+      isTypeof(val) {
+        return typeof val
       }
     }
   };
@@ -374,10 +393,10 @@
         .topic{ font-size: 96px;}
       }
       &.is-size-2{
-        .topic{ font-size: 70px;}
+        .topic{ font-size: 75px;}
       }
       &.is-size-3{
-        .topic{ font-size: 60px;}
+        .topic{ font-size: 62px;}
       }
     }
     .result{
