@@ -5,7 +5,7 @@
 
 <img src='gh_fe9c7647a514_258.jpg'>
 
-<img src='3701599182501_.pic.jpg.jpg'>
+<img src='3701599182501_.pic.jpg'>
 
-<img src='3711599182501_.pic.jpg.jpg'>
+<img src='3711599182501_.pic.jpg'>
 
