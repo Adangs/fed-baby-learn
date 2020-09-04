@@ -27,6 +27,7 @@
   swiper-item,
   scroll-view,
   navigator { box-sizing: border-box; }
+  .inline-block{ display: inline-block;}
   /*==== flex style ====*/
   .flex {
     display: flex;

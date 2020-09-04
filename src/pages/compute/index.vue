@@ -5,7 +5,7 @@
         <x-icon name="icon-008" size="60" @click="onBack" />
       </view>
     </view>
-    <view class="word">
+    <view class="word" :class="size">
       <view class="li"></view>
       <view class="li"></view>
       <view class="li"></view>
@@ -16,26 +16,47 @@
         <view class="topic-b">{{ current.b }}</view>
         <view class="symbol">=</view>
       </view>
-      <!--数量-->
-      <view class="count">
-        <picker :value="endIndex" :range="endList" range-key="name" @change="onChangeEnd">
-          {{ count.start }}/{{ count.end }}
-        </picker>
-      </view>
-      <!--切换-->
-      <view class="icon refresh">
-        <view class="x-icon">
-          <picker :value="rangeIndex" :range="range" range-key="name" @change="onChangePicker">
-            <x-icon name="icon-019" size="50" />
-          </picker>
-          <view class="name">{{max}}以内</view>
+      <!--顶部-->
+      <view class="header flex" :style="'top:' + statusBarHeight + 'px'">
+        <view class="flex-item">
+          <view class="inline-block">
+            <picker :value="diffIndex" :range="difficulty" range-key="name" @change="onChangeDiff">
+              <view class="flex">
+                <text>{{ difficulty[diffIndex].name }}</text>
+                <x-icon name="icon-040" size="22" color="#999" />
+              </view>
+            </picker>
+          </view>
         </view>
       </view>
-      <!--换题-->
-      <view class="icon" @click="onRefresh">
-        <view class="x-icon">
-          <x-icon name="icon-013" size="60" />
-          <view class="name">重置</view>
+      <!--工具-->
+      <view class="tools">
+        <!--切换-->
+        <view class="icon">
+          <view class="x-icon">
+            <picker :value="rangeIndex" :range="range" range-key="name" @change="onChangePicker">
+              <x-icon name="icon-019" size="50" />
+            </picker>
+            <view class="name">{{max}}以内</view>
+          </view>
+        </view>
+        <!--数量-->
+        <view class="count">
+          <view class="inline-block">
+            <picker :value="endIndex" :range="endList" range-key="name" @change="onChangeEnd">
+              <view class="flex">
+                <text>{{ count.start }}/{{ count.end }}</text>
+                <x-icon name="icon-040" size="22" color="#999" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <!--换题-->
+        <view class="icon" @click="onRefresh">
+          <view class="x-icon">
+            <x-icon name="icon-013" size="60" />
+            <view class="name">重置</view>
+          </view>
         </view>
       </view>
     </view>
@@ -112,6 +133,20 @@
           value: 100,
           name: '一组100题'
         }],
+        difficulty: [{
+          value: 0,
+          name: 'A(?)B='
+        }, {
+          value: 1,
+          name: 'A(?)B(?)C='
+        }, {
+          value: 2,
+          name: 'A(?)B(?)C(?)D='
+        }, {
+          value: 3,
+          name: 'A(?)B(?)C(?)D(?)E='
+        }],
+        diff: uni.getStorageSync('storage-compute-diff') || 0,
         max: uni.getStorageSync('storage-compute-max') || 10,
         end: uni.getStorageSync('storage-compute-end') || 100,
         count: {
@@ -127,6 +162,9 @@
       maxResult() {
         return +this.max + 1
       },
+      diffIndex() {
+        return this.difficulty.findIndex(item => item.value === +this.diff)
+      },
       rangeIndex() {
         return this.range.findIndex(item => item.value === +this.max)
       },
@@ -135,6 +173,9 @@
       },
       current() {
         return this.list[this.count.start]
+      },
+      size() {
+        return `is-size-${this.diffIndex}`
       }
     },
     watch: {},
@@ -194,6 +235,16 @@
         const find = this.endList[detail.value]
         this.end = find.value
         uni.setStorageSync('storage-compute-end', this.end)
+        uni.showToast({
+          title: `切换为${find.name}`
+        })
+        this.onRefresh()
+      },
+      // 切换题目数
+      onChangeDiff({ detail }) {
+        const find = this.difficulty[detail.value]
+        this.diff = find.value
+        uni.setStorageSync('storage-compute-diff', this.diff)
         uni.showToast({
           title: `切换为${find.name}`
         })
@@ -266,12 +317,6 @@
     }
     .word{
       width: 100%; height: 100vw; position: relative;
-      .icon{
-        position: absolute; width: 100px; bottom: 20px; right: 0; text-align: center; display: flex; align-items: center;
-        &.refresh{ right: auto; left: 0;}
-        .x-icon{ width: 100%;}
-        .name{ font-size: 22px; text-align: center; color: #999; padding-top: 5px;}
-      }
       .li{
         width: 50%; height: 50%; position: absolute; border: 1px solid #eee; overflow: hidden;
         &:after{ content: ''; position: absolute; width: 200%; border-bottom: 2px dashed #eee; }
@@ -304,10 +349,39 @@
         position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; align-items: center; font-size: 110px;
         .symbol{ padding: 0 15px;}
       }
-      .count{ position: absolute; width: 100%; bottom: 10px; padding: 20px; text-align: center; color: #999; font-size: 24px;}
+      .header{
+        position: absolute; width: 100%; top: 0; text-align: center; height: 100px;
+        text{ padding-right: 20px; color: #999;}
+      }
+      .tools{
+        display: flex; align-items: center; position: absolute; bottom: 0; width: 100%; padding: 20px;
+        .count{
+          flex: 1; padding: 20px; text-align: center; color: #999; font-size: 24px;
+          text{ padding-right: 5px;}
+          .inline-block{ padding: 10px;}
+        }
+        .icon{
+          text-align: center;
+          .x-icon{ width: 100%;}
+          .name{ font-size: 22px; text-align: center; color: #999; padding-top: 5px;}
+        }
+      }
+
+      &.is-size-0{
+        .topic{ font-size: 120px;}
+      }
+      &.is-size-1{
+        .topic{ font-size: 96px;}
+      }
+      &.is-size-2{
+        .topic{ font-size: 70px;}
+      }
+      &.is-size-3{
+        .topic{ font-size: 60px;}
+      }
     }
     .result{
-      font-size: 40px; flex: 1; overflow: auto; padding: 10px;
+      font-size: 58px; flex: 1; overflow: auto; padding: 10px;
       .ul{ display: flex; flex-wrap: wrap; }
       .li{ padding: 10px; width: 20%;}
       .item{
