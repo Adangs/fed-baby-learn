@@ -13,6 +13,7 @@
         <text>心算</text>
       </view>
     </view>
+    <view class="version">v1.2.0</view>
   </view>
 </template>
 
@@ -67,7 +68,7 @@
 <style lang="scss">
   .m-list{
     //  flex-direction: column;
-    position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex;
+    position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; padding-bottom: 150px;
     .logo{ position: absolute; width: 144px; height: 144px; left: 50%; top: -200px; transform: translate3d(-50%, 0, 0);}
     .li{ flex: 1; padding: 30px;}
     .item{
@@ -75,5 +76,6 @@
       &:active{ opacity: .8;}
       text{ display: block; flex: 1; font-size: 50px;}
     }
+    .version{ position: absolute; bottom: 20px; color: #aaa; width: 100%; text-align: center; font-size: 22px;}
   }
 </style>
