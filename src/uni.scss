@@ -13,7 +13,7 @@
  */
 
 /* CDN URL */
-$uni-cdn-url: 'https://img.alicdn.com/static/assets';
+$uni-cdn-url: 'https://alicdn.madaomall.com/fed/uni/ring/v1.0.0';
 @function cdn($url){
   @return url($uni-cdn-url + $url)
 }
@@ -21,11 +21,13 @@ $uni-cdn-url: 'https://img.alicdn.com/static/assets';
 /* 颜色变量 */
 $uni-color-white: #fff;
 $uni-color-default: #333333;
-$uni-color-primary: #FF1D24;
-$uni-color-secondary: #FF613C;
+$uni-color-info: #999;
+$uni-color-primary: #0170fe;
+$uni-color-secondary: #348dfe;
 $uni-color-warning: #FFA340;
 $uni-color-success: #129B00;
-$uni-color-error: #dd524d;
+$uni-color-error: #FF1D24;
+$uni-color-body: #F8F8FC;
 
 /* 弱色 */
 $uni-color-primary-light-1: mix($uni-color-white, $uni-color-primary, 10%);
@@ -38,15 +40,46 @@ $uni-color-primary-light-7: mix($uni-color-white, $uni-color-primary, 60%);
 $uni-color-primary-light-8: mix($uni-color-white, $uni-color-primary, 70%);
 $uni-color-primary-light-9: mix($uni-color-white, $uni-color-primary, 90%);
 
-$uni-color-warning-light-1: mix($uni-color-white, $uni-color-secondary, 10%);
-$uni-color-warning-light-2: mix($uni-color-white, $uni-color-secondary, 20%);
-$uni-color-warning-light-3: mix($uni-color-white, $uni-color-secondary, 30%);
-$uni-color-warning-light-4: mix($uni-color-white, $uni-color-secondary, 30%);
-$uni-color-warning-light-5: mix($uni-color-white, $uni-color-secondary, 50%);
-$uni-color-warning-light-6: mix($uni-color-white, $uni-color-secondary, 60%);
-$uni-color-warning-light-7: mix($uni-color-white, $uni-color-secondary, 70%);
-$uni-color-warning-light-8: mix($uni-color-white, $uni-color-secondary, 80%);
-$uni-color-warning-light-9: mix($uni-color-white, $uni-color-secondary, 90%);
+$uni-color-success-light-1: mix($uni-color-white, $uni-color-success, 10%);
+$uni-color-success-light-2: mix($uni-color-white, $uni-color-success, 20%);
+$uni-color-success-light-3: mix($uni-color-white, $uni-color-success, 30%);
+$uni-color-success-light-4: mix($uni-color-white, $uni-color-success, 30%);
+$uni-color-success-light-5: mix($uni-color-white, $uni-color-success, 50%);
+$uni-color-success-light-6: mix($uni-color-white, $uni-color-success, 60%);
+$uni-color-success-light-7: mix($uni-color-white, $uni-color-success, 70%);
+$uni-color-success-light-8: mix($uni-color-white, $uni-color-success, 80%);
+$uni-color-success-light-9: mix($uni-color-white, $uni-color-success, 90%);
+
+$uni-color-warning-light-1: mix($uni-color-white, $uni-color-warning, 10%);
+$uni-color-warning-light-2: mix($uni-color-white, $uni-color-warning, 20%);
+$uni-color-warning-light-3: mix($uni-color-white, $uni-color-warning, 30%);
+$uni-color-warning-light-4: mix($uni-color-white, $uni-color-warning, 30%);
+$uni-color-warning-light-5: mix($uni-color-white, $uni-color-warning, 50%);
+$uni-color-warning-light-6: mix($uni-color-white, $uni-color-warning, 60%);
+$uni-color-warning-light-7: mix($uni-color-white, $uni-color-warning, 70%);
+$uni-color-warning-light-8: mix($uni-color-white, $uni-color-warning, 80%);
+$uni-color-warning-light-9: mix($uni-color-white, $uni-color-warning, 90%);
+
+$uni-color-error-light-1: mix($uni-color-white, $uni-color-error, 10%);
+$uni-color-error-light-2: mix($uni-color-white, $uni-color-error, 20%);
+$uni-color-error-light-3: mix($uni-color-white, $uni-color-error, 30%);
+$uni-color-error-light-4: mix($uni-color-white, $uni-color-error, 30%);
+$uni-color-error-light-5: mix($uni-color-white, $uni-color-error, 50%);
+$uni-color-error-light-6: mix($uni-color-white, $uni-color-error, 60%);
+$uni-color-error-light-7: mix($uni-color-white, $uni-color-error, 70%);
+$uni-color-error-light-8: mix($uni-color-white, $uni-color-error, 80%);
+$uni-color-error-light-9: mix($uni-color-white, $uni-color-error, 90%);
+
+$uni-color-info-light-1: mix($uni-color-white, $uni-color-info, 10%);
+$uni-color-info-light-2: mix($uni-color-white, $uni-color-info, 20%);
+$uni-color-info-light-3: mix($uni-color-white, $uni-color-info, 30%);
+$uni-color-info-light-4: mix($uni-color-white, $uni-color-info, 30%);
+$uni-color-info-light-5: mix($uni-color-white, $uni-color-info, 50%);
+$uni-color-info-light-6: mix($uni-color-white, $uni-color-info, 60%);
+$uni-color-info-light-7: mix($uni-color-white, $uni-color-info, 70%);
+$uni-color-info-light-8: mix($uni-color-white, $uni-color-info, 80%);
+$uni-color-info-light-9: mix($uni-color-white, $uni-color-info, 90%);
+
 
 /* 文字基本颜色 */
 $uni-text-color: #333;//基本色
@@ -54,6 +87,8 @@ $uni-text-color-inverse: #fff;//反色
 $uni-text-color-grey: #999;//辅助灰色，如加载更多的提示信息
 $uni-text-color-placeholder: #666;
 $uni-text-color-disable: #c0c0c0;
+$uni-text-color-link: #60769f;
+
 
 /* 背景颜色 */
 $uni-bg-color: #ffffff;
@@ -68,10 +103,10 @@ $uni-border-color: #c8c7cc;
 /* 尺寸变量 */
 
 /* 文字尺寸 */
-$uni-font-size-mini: 24px;
-$uni-font-size-sm: 28px;
-$uni-font-size-base: 32px;
-$uni-font-size-lg: 36px;
+$uni-font-size-mini: 26px;
+$uni-font-size-sm: 30px;
+$uni-font-size-base: 34px;
+$uni-font-size-lg: 38px;
 
 /* 高度尺寸 */
 $uni-height-size-mini: 40px;

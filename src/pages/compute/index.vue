@@ -90,7 +90,7 @@
 <script>
   import XIcon from '@/components/x-icon'
   import XButton from '@/components/x-button'
-  import {Function, evaluate} from '@/libs/eval5.min'
+  import { evaluate } from '@/libs/eval5.min'
 
   export default {
     name: 'Compute',

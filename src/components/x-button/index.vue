@@ -2,22 +2,46 @@
   <button
     hover-class="none"
     :class="classNameList"
-    :plain="plain"
+    :plain="plain || transparent"
     :disabled="disabled || loading"
     :loading="loading"
     :scope="scope"
     :open-type="openType"
-    :form-type="formType"
-    @click="onClick"
+    :show-message-card="showMessageCard"
+    :send-message-path="sendMessagePath"
+    :send-message-title="sendMessageTitle"
+    @click.stop="onClick"
+    @getuserinfo="onGetUserInfo"
+    @getAuthorize="onGetAuthorize"
+    @getPhoneNumber="onGetAuthorize"
+    @contact="onContact"
   >
-    <slot />
+    <template v-if="icon">
+      <view class="inline-block">
+        <view class="flex">
+          <view class="_icon">
+            <x-icon :name="icon" :color="iconColor" :size="iconSize" />
+          </view>
+          <view class="_slot">
+            <slot />
+          </view>
+        </view>
+      </view>
+    </template>
+    <template v-else>
+      <slot />
+    </template>
   </button>
 </template>
 
 <script>
+  import XIcon from '@/components/x-icon'
+
   export default {
     name: 'XButton',
-    components: {},
+    components: {
+      XIcon
+    },
     props: {
       size: {
         type: String,
@@ -35,12 +59,28 @@
         type: String,
         default: ''
       },
+      icon: {
+        type: String,
+        default: ''
+      },
+      iconColor: {
+        type: String,
+        default: '#333'
+      },
+      iconSize: {
+        type: Number,
+        default: 32
+      },
       round: {
         type: Boolean,
-        default: true
+        default: false
+      },
+      plain: {
+        type: Boolean,
+        default: false
       },
       // 按钮是否镂空，背景色透明
-      plain: {
+      transparent: {
         type: Boolean,
         default: false
       },
@@ -52,28 +92,41 @@
         type: Boolean,
         default: false
       },
-      openType: {
+      showMessageCard: {
+        type: Boolean,
+        default: false
+      },
+      sendMessagePath: {
         type: String,
         default: ''
       },
-      formType: {
+      sendMessageTitle: {
         type: String,
-        default: 'submit'
+        default: ''
+      },
+      openType: {
+        type: String,
+        default: ''
       }
     },
     data() {
-      return {};
+      return {
+
+      }
     },
     computed: {
       // class列表
       classNameList() {
-        const name = ['x-button']
-        if (this.plain) {
+        const name = ['x-button'];
+        name.push(`is-${this.size}`);
+        if (this.transparent) {
           // 按钮是否镂空，背景色透明
-          name.push('is-plain')
+          name.push('is-transparent')
         } else {
           name.push(`is-${this.type}`)
-          name.push(`is-${this.size}`)
+        }
+        if (this.plain) {
+          name.push('is-plain')
         }
         if (this.round) {
           name.push('is-round')
@@ -85,12 +138,19 @@
       }
     },
     watch: {},
-    created() {
-
-    },
+    created() {},
     methods: {
-      onClick() {
-        this.$emit('click')
+      onClick(e) {
+        this.$emit('click', e);
+      },
+      onGetAuthorize() {
+        this.$emit('getAuthorize', ...arguments)
+      },
+      onGetUserInfo() {
+        this.$emit('getUserInfo', ...arguments)
+      },
+      onContact({ detail }) {
+        this.$emit('getContact', detail)
       }
     }
   };
@@ -98,33 +158,65 @@
 
 <style lang="scss">
   .x-button{
-    border: 0 !important; color: inherit; word-break: break-all; border-radius: 0; text-align: center; vertical-align: middle;
+    border: 0 !important; color: inherit; word-break: break-all; border-radius: 8px; text-align: center; vertical-align: middle;
+    ._icon{ margin-right: 5px;}
     &:after{ display: none; }
-    &.is-plain{ padding: 0; margin: 0; width: auto; height: auto; line-height: inherit; font-size: inherit;}
     // 默认
     &.is-default{
-      background: $uni-color-primary-light-9; color: $uni-color-primary;
+      background-color: $uni-color-info-light-9; color: $uni-text-color;
       &:active{
-        background: $uni-color-warning-light-9;
+        background-color: $uni-color-info-light-8;
+      }
+
+      &.is-disabled,
+      &.is-disabled:active{
+        background: $uni-color-info-light-7; background: linear-gradient(to right, $uni-color-info-light-7, $uni-color-info-light-7); color: #fff !important;
       }
     }
     // 主要
     &.is-primary{
-      background: $uni-color-primary; background: linear-gradient(to right, $uni-color-secondary, $uni-color-primary); color: #fff;
+      background-color: $uni-color-primary; color: #fff;
       &:active{
-        background: $uni-color-secondary; background: linear-gradient(to right, $uni-color-primary, $uni-color-secondary);
+        background-color: $uni-color-secondary;
+      }
+
+      &.is-disabled,
+      &.is-disabled:active{
+        background: $uni-color-primary-light-5; background: linear-gradient(to right, $uni-color-primary-light-5, $uni-color-primary-light-5); color: #fff !important;
       }
     }
-
-    &.is-linear{
-      background:linear-gradient(90deg,rgba(255,97,157,1),rgba(255,29,36,1)); color: #fff;
+    &.is-warning{
+      background: linear-gradient(90deg, $uni-color-warning-light-1, $uni-color-warning); color: #fff;
       &:active{
-        background:linear-gradient(90deg,rgba(255,29,36,1),rgba(255,97,157,1));
+        background:linear-gradient(90deg, $uni-color-warning, $uni-color-warning-light-1);
+      }
+
+      &.is-disabled,
+      &.is-disabled:active{
+        background: $uni-color-warning-light-5; background: linear-gradient(to right, $uni-color-warning-light-5, $uni-color-warning-light-5); color: #fff !important;
       }
     }
+    &.is-success{
+      background: linear-gradient(90deg, $uni-color-success-light-1, $uni-color-success); color: #fff;
+      &:active{
+        background:linear-gradient(90deg, $uni-color-success, $uni-color-success-light-1);
+      }
 
-    &.is-border{
-      background:#fff; color: #FE3D6C;border: 2px solid #FE3D6C!important;
+      &.is-disabled,
+      &.is-disabled:active{
+        background: $uni-color-success-light-5; background: linear-gradient(to right, $uni-color-success-light-5, $uni-color-success-light-5); color: #fff !important;
+      }
+    }
+    &.is-error{
+      background: linear-gradient(90deg, $uni-color-error-light-1, $uni-color-error); color: #fff;
+      &:active{
+        background:linear-gradient(90deg, $uni-color-error, $uni-color-error-light-1);
+      }
+
+      &.is-disabled,
+      &.is-disabled:active{
+        background: $uni-color-error-light-5; background: linear-gradient(to right, $uni-color-error-light-5, $uni-color-error-light-5); color: #fff !important;
+      }
     }
 
     // 大号
@@ -142,9 +234,38 @@
       height: $uni-height-size-sm; line-height: $uni-height-size-sm; font-size: $uni-font-size-sm;
       &.is-round{ border-radius: $uni-height-size-sm;}
     }
-    &.is-disabled,
-    &.is-disabled:active{
-      background: $uni-color-primary-light-5; background: linear-gradient(to right, $uni-color-warning-light-5, $uni-color-primary-light-5); color: #fff !important;
+
+    // cover
+    &.is-cover{
+      margin: 0;border: 0;padding: 0;background: transparent;position: absolute;top: 0;left: 0;right: 0;bottom: 0;z-index: 1;
+      &:active{
+        background: transparent;
+      }
+    }
+
+    &.is-plain{
+      background: transparent; border: 2px solid $uni-color-primary !important; color: $uni-color-primary;
+      &:active{ background: transparent; }
+    }
+
+    // 边框
+    &.is-border{
+      background-color: $uni-color-white; color: $uni-text-color; border: 1px solid #EDEDED !important;
+      &:active{
+        background-color: $uni-color-info-light-9;
+      }
+
+      &.is-disabled,
+      &.is-disabled:active{
+        background: $uni-color-info-light-7; background: linear-gradient(to right, $uni-color-info-light-7, $uni-color-info-light-7); color: #fff !important;
+      }
+    }
+
+    &.is-transparent{
+      padding: 0; margin: 0; width: auto; height: auto; line-height: inherit; font-size: inherit; border-radius: 0 !important;
+      &:active{
+        background-color: transparent;
+      }
     }
   }
 </style>

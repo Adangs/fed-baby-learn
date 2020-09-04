@@ -13,16 +13,32 @@
         <text>心算</text>
       </view>
     </view>
-    <view class="version">v1.2.0</view>
+    <view class="version">
+      <view class="inline-block">
+        <x-button transparent open-type="contact">
+          <view class="flex">
+            <view class="icon">
+              <x-icon name="icon-044" color="#555" />
+            </view>
+            <view>v1.2.0</view>
+          </view>
+        </x-button>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import XImage from '@/components/x-image'
+  import XIcon from '@/components/x-icon'
+  import XButton from '@/components/x-button'
+
   export default {
     name: 'Home',
     components: {
-      XImage
+      XImage,
+      XIcon,
+      XButton
     },
     props: {},
     data() {
@@ -76,6 +92,9 @@
       &:active{ opacity: .8;}
       text{ display: block; flex: 1; font-size: 50px;}
     }
-    .version{ position: absolute; bottom: 20px; color: #aaa; width: 100%; text-align: center; font-size: 22px;}
+    .version{
+      position: absolute; bottom: 20px; color: #aaa; width: 100%; text-align: center; font-size: 22px;
+      .icon{ padding-right: 10px;}
+    }
   }
 </style>
