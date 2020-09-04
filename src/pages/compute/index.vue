@@ -145,7 +145,7 @@
           value: 9,
           name: 'A ± B ± C ± D ± E ='
         }],
-        diff: uni.getStorageSync('storage-compute-diff') || 0,
+        diffIndex: uni.getStorageSync('storage-compute-diff') || 0,
         max: uni.getStorageSync('storage-compute-max') || 10,
         end: uni.getStorageSync('storage-compute-end') || 10,
         count: {
@@ -161,9 +161,6 @@
       maxResult() {
         return +this.max + 1
       },
-      diffIndex() {
-        return this.difficulty.findIndex(item => item.value === +this.diff)
-      },
       rangeIndex() {
         return this.range.findIndex(item => item.value === +this.max)
       },
@@ -174,7 +171,7 @@
         return this.list[this.count.start]
       },
       size() {
-        return `is-size-${this.diffIndex}`
+        return `is-size-${this.diffIndex} is-end-${this.max}`
       }
     },
     watch: {},
@@ -244,8 +241,8 @@
       // 切换题目数
       onChangeDiff({ detail }) {
         const find = this.difficulty[detail.value]
-        this.diff = find.value
-        uni.setStorageSync('storage-compute-diff', this.diff)
+        this.diffIndex = +detail.value
+        uni.setStorageSync('storage-compute-diff', this.diffIndex)
         uni.showToast({
           title: `切换为${find.name}`
         })
@@ -396,9 +393,21 @@
       }
       &.is-size-2{
         .topic{ font-size: 75px;}
+
+        &.is-end-10,
+        &.is-end-20,
+        &.is-end-30{
+          .topic{ font-size: 90px;}
+        }
       }
       &.is-size-3{
         .topic{ font-size: 62px;}
+
+        &.is-end-10,
+        &.is-end-20,
+        &.is-end-30{
+          .topic{ font-size: 75px;}
+        }
       }
     }
     .result{
