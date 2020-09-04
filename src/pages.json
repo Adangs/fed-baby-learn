@@ -1,8 +1,8 @@
 {
 	"pages": [{
-    "path": "pages/compute/index"
-  },{
     "path": "pages/index/index"
+  },{
+    "path": "pages/compute/index"
   },{
     "path": "pages/literacy/index"
   }],

@@ -147,7 +147,7 @@
         }],
         diff: uni.getStorageSync('storage-compute-diff') || 0,
         max: uni.getStorageSync('storage-compute-max') || 10,
-        end: uni.getStorageSync('storage-compute-end') || 100,
+        end: uni.getStorageSync('storage-compute-end') || 10,
         count: {
           start: 1,
           end: 100
