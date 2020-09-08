@@ -334,10 +334,10 @@
       .x-icon{ flex: 1; text-align: center;}
     }
     .word{
-      width: 100%; height: 100vw; position: relative;
+      width: 100%; height: 100vw; position: relative; background-color: #C7EDCC;
       .li{
-        width: 50%; height: 50%; position: absolute; border: 1px solid #eee; overflow: hidden;
-        &:after{ content: ''; position: absolute; width: 200%; border-bottom: 2px dashed #eee; }
+        width: 50%; height: 50%; position: absolute; overflow: hidden; border: 1px solid #B0D3B8;
+        &:after{ content: ''; position: absolute; width: 200%; border-bottom: 2px dashed #B0D3B8; }
         &:nth-child(1){
           border-left: 0; border-top: 0;
           &:after{

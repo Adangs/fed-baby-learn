@@ -182,15 +182,15 @@
 
     }
     .word{
-      width: 100%; height: 100vw; position: relative;
+      width: 100%; height: 100vw; position: relative; background-color: #C7EDCC;
       .icon{
         position: absolute; width: 100px; height: 100px; bottom: 0; right: 0; text-align: center; display: flex; align-items: center;
         &.refresh{ right: auto; left: 0;}
         .x-icon{ width: 100%;}
       }
       .li{
-        width: 50%; height: 50%; position: absolute; border: 1px solid #eee; overflow: hidden;
-        &:after{ content: ''; position: absolute; width: 200%; border-bottom: 2px dashed #eee; }
+        width: 50%; height: 50%; position: absolute; border: 1px solid #B0D3B8; overflow: hidden;
+        &:after{ content: ''; position: absolute; width: 200%; border-bottom: 2px dashed #B0D3B8; }
         &:nth-child(1){
           border-left: 0; border-top: 0;
           &:after{
