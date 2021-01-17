@@ -3,14 +3,21 @@
     <view class="logo">
       <x-image src="/static/images/144x144.png" />
     </view>
-    <view class="li">
-      <view class="item" @click="onLiteracy">
-        <text>识字</text>
+    <view class="ul">
+      <view class="li">
+        <view class="item" @click="onLiteracy">
+          <text>识字</text>
+        </view>
       </view>
-    </view>
-    <view class="li">
-      <view class="item" @click="onCompute">
-        <text>心算</text>
+      <view class="li">
+        <view class="item" @click="onCompute">
+          <text>心算</text>
+        </view>
+      </view>
+      <view class="li">
+        <view class="item" @click="onPrint">
+          <text>打印</text>
+        </view>
       </view>
     </view>
     <view class="version">
@@ -76,6 +83,11 @@
         uni.navigateTo({
           url: '/pages/compute/index'
         })
+      },
+      onPrint() {
+        uni.navigateTo({
+          url: '/pages/print/index'
+        })
       }
     }
   };
@@ -84,13 +96,16 @@
 <style lang="scss">
   .m-list{
     //  flex-direction: column;
-    position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; padding-bottom: 150px;
+    position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; padding-bottom: 150px; width: 100%;
     .logo{ position: absolute; width: 144px; height: 144px; left: 50%; top: -200px; transform: translate3d(-50%, 0, 0);}
-    .li{ flex: 1; padding: 30px;}
+    .ul{
+      display: flex; flex-wrap: wrap; width: 100%; padding: 0 50px;
+    }
+    .li{ flex: 1; padding: 20px;}
     .item{
-      width: 220px; height: 220px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center;
+      width: 150; height: 150px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center; margin: 0 auto;
       &:active{ opacity: .8;}
-      text{ display: block; flex: 1; font-size: 50px;}
+      text{ display: block; flex: 1; font-size: 40px;}
     }
     .version{
       position: absolute; bottom: 20px; color: #aaa; width: 100%; text-align: center; font-size: 22px;

@@ -5,6 +5,8 @@
     "path": "pages/compute/index"
   },{
     "path": "pages/literacy/index"
+  },{
+    "path": "pages/print/index"
   }],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
