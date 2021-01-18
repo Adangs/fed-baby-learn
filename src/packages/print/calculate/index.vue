@@ -12,11 +12,13 @@
 
 <script>
 import XNavigationBar from '@/components/x-navigation-bar'
+import XImage from '@/components/x-image'
 
 export default {
   name: 'Calculate',
   components: {
-    XNavigationBar
+    XNavigationBar,
+    XImage
   },
   props: {},
   data () {
@@ -31,6 +33,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  .m-calculate{
+    .preview{ background-color: #f9f9f9; height: 500px;}
+  }
 </style>
