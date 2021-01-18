@@ -3,7 +3,7 @@
     <x-navigation-bar title="打印" />
     <view class="ul">
       <view class="li">
-        <view class="item">
+        <view class="item" @click="onCalculate">
           <text>数学</text>
         </view>
       </view>
@@ -42,7 +42,11 @@ export default {
 
   },
   methods: {
-
+    onCalculate() {
+      uni.navigateTo({
+        url: '/packages/print/calculate/index'
+      })
+    }
   }
 };
 </script>

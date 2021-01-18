@@ -1,30 +1,32 @@
 <template>
   <view :class="classNameList">
     <view v-if="fixed && placeholder" class="_placeholder" :style="'background:'+background">
-      <view class="_bar" :style="'height:'+statusBarHeight+'px'" />
-      <view class="_title" :style="alipayBarHeight" />
+      <view class="_bar" :style="'height:'+statusBarHeight+'px'"/>
+      <view class="_title" :style="alipayBarHeight"/>
     </view>
     <view class="_content" :style="'background:' + background + ';color:' + color">
-      <view class="_bar" :style="'height:'+statusBarHeight+'px'" @click="onBar" />
+      <view class="_bar" :style="'height:'+statusBarHeight+'px'" @click="onBar"/>
       <view class="_title" :style="alipayBarHeight" @click="onClick">
-        <view v-if="isBack" class="_ul">
-          <view class="_li" @click="onNavigateBack">
-            <view class="_icon">
-              <x-icon name="icon-left" :color="iconColor" />
+        <view v-if="isBack || isHome || ifSubscribe" class="_ul">
+          <view v-if="isBack" class="_li" @click="onNavigateBack">
+            <view class="_item">
+              <view class="_icon">
+                <x-icon name="icon-008" :color="iconColor" size="50"/>
+              </view>
             </view>
           </view>
+          <!--#ifdef MP-WEIXIN-->
+          <view v-if="isHome" class="_li" @click="onHome">
+            <view class="_item">
+              <view class="_icon">
+                <x-icon name="icon-055" :color="iconColor" size="50"/>
+              </view>
+            </view>
+          </view>
+          <!--#endif-->
         </view>
         <view v-if="title" class="_name">{{title}}</view>
-        <view v-else-if="search" class="_search">
-          <view class="x-navigation-bar-search" @click="onToSearch">
-            <view class="_icon">
-              <x-icon name="icon-search" color="#8A8A8A" size="28" />
-            </view>
-            <view class="_preview">{{search}}</view>
-          </view>
-          <view/>
-        </view>
-        <slot v-else />
+        <slot v-else/>
       </view>
     </view>
   </view>
@@ -45,7 +47,7 @@
       },
       background: {
         type: String,
-        default: '#FFF'
+        default: '#fff'
       },
       iconColor: {
         type: String,
@@ -55,15 +57,15 @@
         type: String,
         default: '#000'
       },
+      // 返回首页要不要弹出订阅消息
+      ifSubscribe: {
+        type: Boolean,
+        default: false
+      },
       // 固定悬浮
       fixed: {
         type: Boolean,
         default: true
-      },
-      // 搜索框
-      search: {
-        type: String,
-        default: ''
       },
       // 透明模式
       transparent: {
@@ -74,12 +76,15 @@
       placeholder: {
         type: Boolean,
         default: true
+      },
+      // 是否订阅了消息
+      isSubscribed: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
-      return {
-
-      };
+      return {}
     },
     computed: {
       // 支付宝平台
@@ -136,10 +141,21 @@
       },
       // 显示返回按钮
       isBack() {
-        // 需要确认支付宝是否默认显示返回按钮
-        const pages = getCurrentPages()
-        const page = pages[pages.length - 1]
-        return page.route === 'packages/mall/detail/index' || pages && pages.length > 1
+        const pages = getCurrentPages();
+        return pages && pages.length > 1;
+      },
+      // 显示返回首页按钮
+      isHome(){
+        // 不需要加返回首页的页面
+        const blackList = [
+          'pages/index/index'
+        ];
+        const pages = getCurrentPages();
+        if(pages){
+          const page = pages[pages.length - 1];
+          return pages.length === 1 && !blackList.includes(page.route);
+        }
+        return false;
       }
     },
     created() {
@@ -161,56 +177,118 @@
       onClick(e) {
         this.$emit('click', e)
       },
-      onToSearch() {
-        uni.navigateTo({
-          url: '/packages/mall/search/index'
+      async onHome() {
+        // redirectTo
+        // switchTab
+        // navigateTo
+        uni.redirectTo({
+          url: '/pages/index/index'
         })
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss">
-  .x-navigation-bar{
-    &.is-alipay{
+  .x-navigation-bar {
+    &.is-alipay {
       // &.is-back .title{ padding-left: 70px;}
-      ._title{
-        display: flex; align-items: center; height: inherit; width: 100%; padding: 0 14px;
-        ._ul{
-          position: relative; left: 0; top: 0; margin: 0 15px 0 0; width: 62px;
-          ._li{ display: none;}
-        }
-        ._name{ text-align: left; flex: 1;}
-        ._search{ flex: 1;}
-        .x-navigation-bar-search{ width: 55%; }
-      }
-    }
-    &.is-fixed{
-      position: relative; z-index: 999;
-      ._content{ position: fixed; width: 100%; top: 0; left: 0;}
-    }
-    &.is-transparent{
       ._title {
-        ._ul{ background: transparent;}
-        ._li{ background: transparent; border-color: transparent;}
+        display: flex;
+        align-items: center;
+        height: inherit;
+        width: 100%;
+        padding: 0 14px;
+
+        ._ul {
+          position: relative;
+          left: 0;
+          top: 0;
+          margin: 0 15px 0 0;
+          width: 62px;
+
+          ._li {
+            display: none;
+          }
+        }
+
+        ._name {
+          text-align: left;
+          flex: 1;
+        }
+
+        ._search {
+          flex: 1;
+        }
+
+        .x-navigation-bar-search {
+          width: 55%;
+        }
       }
     }
-    ._title{
-      height: 88px; font-size: 36px; font-weight: bold; overflow: hidden; padding: 0 20px; position: relative;
-      ._name{ text-align: center; line-height: 88px; }
-      ._ul{ position: absolute; height: 62px; left: 14px; top: 50%; margin-top: -31px; display: flex; align-items: center; overflow: hidden;}
-      ._li{
-        width: 50px; height: 100%; display: flex; align-items: center; background: #fff;
-        ._icon{ text-align: center; display: block; width: 100%;}
+
+    &.is-fixed {
+      position: relative;
+      z-index: 999;
+
+      ._content {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
       }
-      ._search{
-        height: 88px; display: flex; align-items: center;
-        > view{ flex: 1;}
-        ._preview{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: normal !important;}
+    }
+
+    &.is-transparent {
+      ._title {
+        ._ul {
+          background: transparent;
+        }
+
+        ._li{
+          background: rgba(0,0,0,.15); border-radius: 62px;
+        }
       }
-      .x-navigation-bar-search{
-        overflow: hidden; height: $uni-height-size-sm; background: #fff; border-radius: $uni-border-radius-base; display: flex; align-items: center; font-size: $uni-font-size-sm; color: #A4A4A4;
-        ._icon{ width: 62px; text-align: center;}
+    }
+
+    ._title {
+      height: 88px;
+      font-size: 36px;
+      font-weight: bold;
+      overflow: hidden;
+      padding: 0 20px;
+      position: relative;
+
+      ._name {
+        text-align: center;
+        line-height: 88px;
+      }
+
+      ._ul {
+        position: absolute;
+        height: 62px;
+        left: 14px;
+        top: 50%;
+        margin-top: -31px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      ._li {
+        height: 100%;
+        width: 62px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        background: inherit;
+        margin-right: 20px;
+        ._item{
+          flex: 1; text-align: center; height: 50px; overflow: hidden;
+        }
+        ._icon {
+          width: 50px; height: 50px; text-align: center; display: inline-block; overflow: hidden; margin-top: -2px;
+        }
       }
     }
   }

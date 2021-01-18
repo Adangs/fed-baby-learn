@@ -8,14 +8,20 @@
   },{
     "path": "pages/print/index"
   }],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "",
-    "navigationBarBackgroundColor": "#fff",
-    "backgroundColor": "#FFF",
-    "navigationStyle": "custom",
-    "enablePullDownRefresh": false,
-    "transparentTitle": "always",
-    "titlePenetrate": "YES"
-	}
+  "subPackages": [{
+    "root": "packages/print",
+    "pages": [{
+      "path": "calculate/index"
+    }]
+  }],
+  "globalStyle": {
+      "navigationBarTextStyle": "black",
+      "navigationBarTitleText": "",
+  "navigationBarBackgroundColor": "#fff",
+  "backgroundColor": "#FFF",
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": false,
+  "transparentTitle": "always",
+  "titlePenetrate": "YES"
+  }
 }
