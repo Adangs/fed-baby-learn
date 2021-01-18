@@ -103,7 +103,7 @@
     }
     .li{ flex: 1; padding: 20px;}
     .item{
-      width: 150; height: 150px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center; margin: 0 auto;
+      width: 150px; height: 150px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center; margin: 0 auto;
       &:active{ opacity: .8;}
       text{ display: block; flex: 1; font-size: 40px;}
     }
