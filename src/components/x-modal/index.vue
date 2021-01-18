@@ -1,137 +1,116 @@
 <template>
   <view :class="classNameList">
-    <view class="_mask" @click="hide" @touchmove.stop.prevent="moveHandle" />
-    <view class="_body">
-      <view class="_content" :style="{'background':  background}">
-        <view v-if="iconSrc" class="_icon">
-          <x-image :src="iconSrc" />
-        </view>
-        <view v-if="title" class="_title">{{title}}</view>
-        <view v-if="content" class="_desc">{{content}}</view>
-        <view v-else class="_slot"><slot /></view>
-        <view v-if="showCancel || showConfirm" class="_footer">
-          <view v-if="showCancel" class="_li">
-            <x-button size="small" type="default" @click="hide">{{cancelText}}</x-button>
-          </view>
-          <view v-if="showConfirm" class="_li">
-            <x-button size="small" @click="success">{{confirmText}}</x-button>
-          </view>
-        </view>
+    <view class="_mask" @click="onCancel" @touchmove.stop.prevent="moveHandle" />
+    <view class="_body" :style="{'background':  background}">
+      <view v-if="title" class="_title">
+        {{title}}
       </view>
-      <view v-if="showClose" class="_cancel">
-        <x-icon name="icon-close-line1" size="50" color="#fff" @click="hide" />
+      <view class="_content">
+        <slot />
       </view>
+      <template v-if="cancelText || confirmText">
+        <view class="_footer">
+          <view v-if="cancelText" class="_button _cancel" @click="onCancel">
+            <view class="text">
+              {{ cancelText }}
+            </view>
+          </view>
+          <view v-if="confirmText" class="_button _confirm" @click="onConfirm">
+            <block v-if="openType">
+              <x-button plain block :open-type="openType" @getUserInfo="getUserInfo">
+                <view class="text">
+                  {{ confirmText }}
+                </view>
+              </x-button>
+            </block>
+            <view v-else class="text">
+              {{ confirmText }}
+            </view>
+          </view>
+        </view>
+      </template>
     </view>
   </view>
 </template>
 
 <script>
-  import XButton from '@/components/x-button'
-  import XIcon from '@/components/x-icon'
-  import XImage from '@/components/x-image'
-
-  export default {
-    name: 'XModal',
-    components: {
-      XButton,
-      XIcon,
-      XImage
+import XButton from '@/components/x-button'
+export default {
+  name: 'XModal',
+  components: {
+    XButton
+  },
+  props: {
+    background: {
+      type: String,
+      default: '#fff'
     },
-    props: {
-      background: {
-        type: String,
-        default: '#fff'
-      },
-      visible: {
-        type: Boolean,
-        default: false
-      },
-      icon: {
-        type: String,
-        default: 'success'
-      },
-      customClass: {
-        type: String,
-        default: ''
-      },
-      title: {
-        type: String,
-        default: ''
-      },
-      content: {
-        type: String,
-        default: ''
-      },
-      // 显示底部关闭按钮
-      showClose: {
-        type: Boolean,
-        default: true
-      },
-      // 取消按钮
-      showCancel: {
-        type: Boolean,
-        default: false
-      },
-      cancelText: {
-        type: String,
-        default: '取消'
-      },
-      // 确定按钮
-      showConfirm: {
-        type: Boolean,
-        default: true
-      },
-      confirmText: {
-        type: String,
-        default: '确定'
-      }
+    visible: {
+      type: Boolean,
+      default: false
     },
-    data() {
-      return {};
+    cancelText: {
+      type: String,
+      default: ''
     },
-    computed: {
-      // class列表
-      classNameList() {
-        const name = ['x-modal']
-        if (this.visible) {
-          name.push('is-show')
-        }
-        // 自定义class
-        if (this.customClass) {
-          name.push(this.customClass)
-        }
-        return name.join(' ')
-      },
-      iconSrc() {
-        switch (this.icon) {
-          case 'success':
-            return '/static/images/modal-success.png'
-          case 'fail':
-            return '/static/images/modal-fail.png'
-          case 'none':
-            return false
-          default:
-            return this.icon
-        }
-      }
+    confirmText: {
+      type: String,
+      default: ''
     },
-    watch: {},
-    onLoad() {
-
+    icon: {
+      type: String,
+      default: 'success'
     },
-    methods: {
-      // 若需要禁止蒙版下的页面滚动，可使用 @touchmove.stop.prevent="moveHandle"，moveHandle 可以用来处理 touchmove 的事件，也可以是一个空函数
-      moveHandle() {},
-      hide() {
-        this.$emit('update:visible', false)
-        this.$emit('close')
-      },
-      success() {
-        this.$emit('update:visible', false)
-        this.$emit('success')
-      }
+    title: {
+      type: String,
+      default: ''
+    },
+    openType: {
+      type: String,
+      default: ''
+    },
+    isPadding: {
+      type: Boolean,
+      default: true
     }
-  };
+  },
+  data() {
+    return {}
+  },
+  computed: {
+    classNameList() {
+      const arr = ['x-modal']
+      if (this.visible) {
+        arr.push('is-show')
+      }
+      if (this.isPadding) {
+        arr.push('is-padding')
+      }
+      return arr.join(' ')
+    }
+  },
+  watch: {},
+  created() {
+
+  },
+  methods: {
+    // 若需要禁止蒙版下的页面滚动，可使用 @touchmove.stop.prevent="moveHandle"，moveHandle 可以用来处理 touchmove 的事件，也可以是一个空函数
+    moveHandle() {},
+    onCancel() {
+      this.$emit('update:visible', false)
+      this.$emit('cancel')
+    },
+    onConfirm() {
+      if (this.openType) return
+      this.$emit('update:visible', false)
+      this.$emit('confirm')
+    },
+    getUserInfo({ detail }) {
+      this.$emit('update:visible', false)
+      this.$emit('confirm', detail)
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -141,19 +120,27 @@
       display: block;
       ._body{ opacity: 1; animation: zoomIn .3s ease-out;}
     }
+    &.is-padding{
+      ._content{ padding: 30px 26px;}
+    }
     ._mask{ background-color: rgba(0,0,0,.5); position: absolute; width: 100%; height: 100%; left: 0; right: 0;}
-    ._body{ opacity: 0; position: absolute; left: 50%; top: 50%; transform: translate3d(-50%, -45%, 0);}
+    ._body{
+      opacity: 0; position: absolute; left: 50%; top: 50%; transform: translate3d(-50%, -50%, 0); font-size: 28px; border-radius: 10px; overflow: hidden;
+    }
+    ._title{ border-bottom: 1px solid #eee; padding: 20px 26px; font-weight: bold; font-size: 30px; text-align: center;}
     ._content{
-      width: 520px; border-radius: 10px; padding: 30px; text-align: center; overflow: hidden;
-      > ._icon{ width: 180px; height: 180px; display: inline-block;}
-      > ._title{ font-size: 36px; padding: 20px 0; color: $uni-text-color;}
-      > ._desc{ font-size: 32px; color: $uni-text-color-placeholder; line-height: 1.4;}
-      > ._footer{
-        display: flex; align-items: center; padding-top: 40px;
-        ._li{ flex: 1; padding: 20px;}
+      width: 540px; overflow: hidden; color: #000;
+    }
+    ._footer{
+      display: flex; align-items: center; border-top: 1px solid #eee;
+      ._button{
+        flex: 1; border-right: 1px solid #eee;
+        .text{ padding: 20px 0; text-align: center;}
+        &._confirm .text{ color: #44ae49;}
+        &._cancel .text{ color: #111;}
+        &:last-child{ border-right: 0;}
       }
     }
-    ._cancel{ text-align: center; padding-top: 60px;}
   }
   @keyframes zoomIn {
     0% {

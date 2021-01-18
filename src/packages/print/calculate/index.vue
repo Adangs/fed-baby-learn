@@ -1,7 +1,12 @@
 <template>
   <view class="m-calculate">
     <x-navigation-bar title="数学" />
+    <view class="preview">
 
+    </view>
+    <view class="tools">
+
+    </view>
   </view>
 </template>
 
