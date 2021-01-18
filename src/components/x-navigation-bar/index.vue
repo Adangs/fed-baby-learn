@@ -45,15 +45,15 @@
       },
       background: {
         type: String,
-        default: '#FF2025'
+        default: '#FFF'
       },
       iconColor: {
         type: String,
-        default: '#fff'
+        default: '#000'
       },
       color: {
         type: String,
-        default: '#fff'
+        default: '#000'
       },
       // 固定悬浮
       fixed: {
