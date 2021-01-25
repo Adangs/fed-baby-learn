@@ -2,6 +2,7 @@
   <view class="m-stickers">
     <x-navigation-bar title="字帖" />
     <view class="preview">
+      <canvas type="2d" canvasId="myCanvas"></canvas>
       <view v-if="src" class="pic">
         <x-image :src="src" mode="aspectFit" />
       </view>
@@ -12,6 +13,7 @@
     <view class="tools">
       <view class="li"><x-button>保存图片</x-button></view>
     </view>
+
 
     <x-canvas v-if="lists" ref="ref-x-canvas" :lists="lists" width="2480" height="3508" auto @canvasImage="onCanvasImage"></x-canvas>
   </view>
@@ -39,20 +41,28 @@ export default {
     src: null,
     value: null,
     lists: null,
-    tableConfig: {
+    config: {
+      x: 96,
+      y: 96,
       cell: {
-        width: 300,
-        height: 100
+        width: 210,
+        height: 210
       }
-    }
+    },
+    canvas: null
   }
   },
   computed: {},
   watch: {},
   created () {
-    this.onSetData()
+    this.initCanvas()
+    // this.onSetData()
   },
   methods: {
+    initCanvas() {
+      this.canvas = uni.createCanvasContext('myCanvas')
+      console.log(this.canvas)
+    },
     onCanvasImage(res) {
       this.src = res
       console.log(res)
@@ -61,7 +71,7 @@ export default {
       let i
       let j
     },
-    onSetData() {
+    onSetData(url) {
       const list = []
       list.push({
         type: 'rect',
@@ -69,9 +79,19 @@ export default {
         height: 3508,
         x: 0,
         y: 0,
-        color: '#FF0000',
+        color: '#FFF',
       })
-      this.lists = list
+      // for (let i = 0; i < 11; i++) {
+      //   list.push({
+      //     type: 'image',
+      //     file: '/static/images/field.png'
+      //   })
+      // }
+      list.push({
+        type: 'image',
+        file: 'field.png'
+      })
+      // this.lists = list
     }
   }
 }
@@ -84,6 +104,7 @@ export default {
     .preview{
       flex: 1; background-color: #f9f9f9;
       .pic{ width: 100%; height: 100%;}
+      canvas{ width: 210px; height: 210px; display: block !important;}
     }
     .textarea{ padding: 20px;}
     .tools{
