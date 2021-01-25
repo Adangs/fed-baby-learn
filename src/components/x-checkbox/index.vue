@@ -1,6 +1,6 @@
 <template>
-  <view class="x-checkbox" @click.stop="onChange">
-    <x-icon :name="icon" size="40" />
+  <view class="x-checkbox" :class="{'is-disabled': disabled}" @click.stop="onChange">
+    <x-icon :name="icon" :size="size" :color="color" />
     <view v-if="label" class="_label">{{ label }}</view>
   </view>
 </template>
@@ -20,6 +20,14 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    size: {
+      type: Number,
+      default: 32
     }
   },
   data() {
@@ -29,7 +37,10 @@ export default {
   },
   computed: {
     icon() {
-      return this.checked ? 'icon-38' : 'icon-50'
+      return this.checked ? 'icon-018' : 'icon-016'
+    },
+    color() {
+      return this.disabled ? '#ccc' : (this.checked ? '#0170fe' : '#333333')
     }
   },
   watch: {},
@@ -38,6 +49,7 @@ export default {
   },
   methods: {
     onChange() {
+      if (this.disabled) return false
       this.$emit('update:checked', !this.checked)
       this.$emit('change', !this.checked)
     }
@@ -48,6 +60,7 @@ export default {
 <style lang="scss">
   .x-checkbox{
     display: flex; align-items: center;
-    ._label{ padding-left: 10px; font-size: 28px;}
+    &.is-disabled{}
+    ._label{ padding-left: 10px;}
   }
 </style>

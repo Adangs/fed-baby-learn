@@ -1,122 +1,88 @@
 <template>
-  <textarea
-    class="x-textarea"
-    :value="inputValue"
-    :placeholder="placeholder"
-    :placeholder-class="placeholderClass"
-    :fixed="fixed"
-    :focus="focus"
-    :auto-height="autoHeight"
-    :maxlength="maxlength"
-    :disabled="disabled"
-    :show-confirm-bar="showConfirmBar"
-    :cursor-spacing="cursorSpacing"
-    :hold-keyboard="holdKeyboard"
-    :adjust-position="adjustPosition"
-    @input="onInput"
-    @focus="onFocus"
-    @blur="onBlur"
-    @linechange="onLine"
-    @confirm="onConfirm"
-  />
+  <view class="x-textarea" :style="{'height': height + 'rpx'}">
+    <textarea class="_textarea" :value="inputValue" :placeholder-class="placeholderClass" :placeholder="placeholder" :maxlength="maxlength" @input="onInput" @focus="onFocus" @blur="onBlur" @confirm="onConfirm" />
+  </view>
 </template>
 
 <script>
-export default {
-  name: 'XTextarea',
-  components: {},
-  props: {
-    // 输入框的初始内容
-    value: {
-      type: String,
-      value: ''
+  export default {
+    name: 'XTextarea',
+    components: {},
+    props: {
+      background: {
+        type: String,
+        default: '#ffffff'
+      },
+      // 输入框的初始内容
+      value: {
+        type: String,
+        value: ''
+      },
+      // 高
+      height: {
+        type: [String, Number],
+        default: 300
+      },
+      placeholder: {
+        type: String,
+        default: '请输入内容'
+      },
+      placeholderClass	: {
+        type: String,
+        default: 'input-placeholder'
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      focus: {
+        type: Boolean,
+        default: false
+      },
+      maxlength: {
+        type: [String, Number],
+        default: 140
+      }
     },
-    fixed: {
-      type: Boolean,
-      default: false
+    data() {
+      return {
+        inputValue: ''
+      }
     },
-    placeholder: {
-      type: String,
-      default: '请输入内容'
+    computed: {
+
     },
-    autoHeight: {
-      type: Boolean,
-      default: false
+    watch: {
+      value(val) {
+        this.inputValue = val
+      }
     },
-    disabled: {
-      type: Boolean,
-      default: false
+    created() {
+      this.inputValue = this.value
     },
-    // 键盘弹起时，是否自动上推页面
-    adjustPosition	: {
-      type: Boolean,
-      default: true
-    },
-    // focus时，点击页面的时候不收起键盘
-    holdKeyboard		: {
-      type: Boolean,
-      default: false
-    },
-    focus: {
-      type: Boolean,
-      default: false
-    },
-    placeholderClass	: {
-      type: String,
-      default: 'textarea-placeholder'
-    },
-    maxlength: {
-      type: Number,
-      default: 140
-    },
-    // 指定光标与键盘的距离
-    cursorSpacing	: {
-      type: Number,
-      default: 0
-    },
-    // 是否显示键盘上方带有”完成“按钮那一栏
-    showConfirmBar	: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data() {
-    return {
-      inputValue: ''
-    }
-  },
-  computed: {},
-  watch: {
-    value(val) {
-      this.inputValue = val
-    }
-  },
-  created() {
-    this.inputValue = this.value
-  },
-  methods: {
-    onInput({ target }) {
-      this.inputValue = target.value
-      this.$emit('input', this.inputValue, target)
-    },
-    onFocus() {
-      this.$emit('focus', this.inputValue)
-    },
-    onBlur() {
-      this.$emit('blur', this.inputValue)
-    },
-    onConfirm() {
-      this.$emit('confirm', this.inputValue)
-    },
-    onLine({ detail }) {
-      this.$emit('line', detail)
+    methods: {
+      onInput({ target }) {
+        // console.log(...arguments)
+        this.inputValue = target.value
+        this.$emit('update:value', target.value)
+        this.$emit('input', this.inputValue, target)
+      },
+      onFocus() {
+        this.$emit('focus', this.inputValue)
+      },
+      onBlur() {
+        this.$emit('blur', this.inputValue)
+      },
+      onConfirm() {
+        this.$emit('confirm', this.inputValue)
+      }
     }
   }
-}
 </script>
 
-<style lang="less">
+<style lang="scss">
   .x-textarea{
-    width: 100%; font-size: 28px; background-color: #fff; color: #000;
+    display: flex; align-items: center; padding: 20px 0;
+    ._textarea{ height: 100%; font-size: $uni-font-size-sm; flex: 1; background: transparent; color: $uni-text-color;}
   }
 </style>

@@ -1,0 +1,97 @@
+<template>
+  <view class="m-stickers">
+    <x-navigation-bar title="字帖" />
+    <view class="preview">
+      <view v-if="src" class="pic">
+        <x-image :src="src" mode="aspectFit" />
+      </view>
+    </view>
+    <view class="textarea">
+      <x-textarea :value.sync="value" height="200" placeholder="请输入汉字，最多不超过14个" maxlength="14"></x-textarea>
+    </view>
+    <view class="tools">
+      <view class="li"><x-button>保存图片</x-button></view>
+    </view>
+
+    <x-canvas v-if="lists" ref="ref-x-canvas" :lists="lists" width="2480" height="3508" auto @canvasImage="onCanvasImage"></x-canvas>
+  </view>
+</template>
+
+<script>
+import XNavigationBar from '@/components/x-navigation-bar'
+import XImage from '@/components/x-image'
+import XTextarea from '@/components/x-textarea'
+import XButton from '@/components/x-button'
+import XCanvas from '@/components/x-canvas'
+
+export default {
+  name: 'Calculate',
+  components: {
+    XNavigationBar,
+    XImage,
+    XTextarea,
+    XButton,
+    XCanvas
+  },
+  props: {},
+  data () {
+  return {
+    src: null,
+    value: null,
+    lists: null,
+    tableConfig: {
+      cell: {
+        width: 300,
+        height: 100
+      }
+    }
+  }
+  },
+  computed: {},
+  watch: {},
+  created () {
+    this.onSetData()
+  },
+  methods: {
+    onCanvasImage(res) {
+      this.src = res
+      console.log(res)
+    },
+    onTrapezoid(type) {
+      let i
+      let j
+    },
+    onSetData() {
+      const list = []
+      list.push({
+        type: 'rect',
+        width: 2480,
+        height: 3508,
+        x: 0,
+        y: 0,
+        color: '#FF0000',
+      })
+      this.lists = list
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  page{ height: 100%;}
+  .m-stickers{
+    display: flex; flex-direction: column; height: 100%; overflow: hidden;
+    .preview{
+      flex: 1; background-color: #f9f9f9;
+      .pic{ width: 100%; height: 100%;}
+    }
+    .textarea{ padding: 20px;}
+    .tools{
+      padding: 40px;
+      .li{
+        margin-bottom: 10px;
+        &:last-child{ margin-bottom: 0;}
+      }
+    }
+  }
+</style>

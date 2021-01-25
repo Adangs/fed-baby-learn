@@ -3,18 +3,18 @@
     <x-navigation-bar title="打印" />
     <view class="ul">
       <view class="li">
-        <view class="item" @click="onCalculate">
-          <text>数学</text>
+        <view class="item" @click="onNavigateTo('/packages/print/stickers/index')">
+          <text>字贴</text>
+        </view>
+      </view>
+      <view class="li">
+        <view class="item" @click="onNavigateTo('/packages/print/calculate/index')">
+          <text>口算</text>
         </view>
       </view>
       <view class="li">
         <view class="item">
-          <text>语文</text>
-        </view>
-      </view>
-      <view class="li">
-        <view class="item">
-          <text>英语</text>
+          <text>涂色板</text>
         </view>
       </view>
     </view>
@@ -42,9 +42,9 @@ export default {
 
   },
   methods: {
-    onCalculate() {
+    onNavigateTo(url) {
       uni.navigateTo({
-        url: '/packages/print/calculate/index'
+        url
       })
     }
   }

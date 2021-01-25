@@ -12,6 +12,8 @@
     "root": "packages/print",
     "pages": [{
       "path": "calculate/index"
+    }, {
+      "path": "stickers/index"
     }]
   }],
   "globalStyle": {
