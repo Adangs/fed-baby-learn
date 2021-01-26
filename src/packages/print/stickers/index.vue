@@ -10,14 +10,12 @@
       <x-textarea :value.sync="value" height="200" placeholder="请输入汉字，最多不超过14个" maxlength="14"></x-textarea>
     </view>
     <view class="tools">
-      <view class="li"><x-button>保存图片</x-button></view>
+      <view class="li"><x-button @click="onSavePic">保存图片</x-button></view>
     </view>
     <view class="canvas-list">
       <canvas :style="'width: '+ config.width +'px; height: '+ config.height +'px;'" canvasId="previewCanvas"></canvas>
       <canvas :style="'width: '+ config.cell.width +'px; height: '+ config.cell.height +'px;'" canvasId="fieldCanvas"></canvas>
     </view>
-
-    <x-canvas v-if="lists" ref="ref-x-canvas" :lists="lists" width="2480" height="3508" auto @canvasImage="onCanvasImage"></x-canvas>
   </view>
 </template>
 
@@ -26,7 +24,6 @@ import XNavigationBar from '@/components/x-navigation-bar'
 import XImage from '@/components/x-image'
 import XTextarea from '@/components/x-textarea'
 import XButton from '@/components/x-button'
-import XCanvas from '@/components/x-canvas'
 
 export default {
   name: 'Calculate',
@@ -34,8 +31,7 @@ export default {
     XNavigationBar,
     XImage,
     XTextarea,
-    XButton,
-    XCanvas
+    XButton
   },
   props: {},
   data () {
@@ -60,7 +56,6 @@ export default {
   watch: {},
   created () {
     this.setField()
-    // this.onSetData()
   },
   methods: {
     setField() {
@@ -126,35 +121,23 @@ export default {
         });
       })
     },
-    onCanvasImage(res) {
-      this.src = res
-      console.log(res)
-    },
-    onTrapezoid(type) {
-      let i
-      let j
-    },
-    onSetData(url) {
-      const list = []
-      list.push({
-        type: 'rect',
-        width: 2480,
-        height: 3508,
-        x: 0,
-        y: 0,
-        color: '#FFF',
-      })
-      // for (let i = 0; i < 11; i++) {
-      //   list.push({
-      //     type: 'image',
-      //     file: '/static/images/field.png'
-      //   })
-      // }
-      list.push({
-        type: 'image',
-        file: 'field.png'
-      })
-      // this.lists = list
+    onSavePic() {
+      if (this.src) {
+        uni.saveImageToPhotosAlbum({
+          filePath: this.src,
+          success: () => {
+            uni.showToast({
+              title: '图片保存成功，请自行打印~',
+              icon: 'success'
+            });
+          }
+        })
+      } else {
+        uni.showToast({
+          title: '请先生成图片~',
+          icon: 'none'
+        });
+      }
     }
   }
 }
