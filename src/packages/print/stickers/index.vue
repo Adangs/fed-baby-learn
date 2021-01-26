@@ -2,7 +2,6 @@
   <view class="m-stickers">
     <x-navigation-bar title="字帖" />
     <view class="preview">
-      <canvas canvasId="myCanvas"></canvas>
       <view v-if="src" class="pic">
         <x-image :src="src" mode="aspectFit" />
       </view>
@@ -13,7 +12,10 @@
     <view class="tools">
       <view class="li"><x-button>保存图片</x-button></view>
     </view>
-
+    <view class="canvas-list">
+      <canvas :style="'width: '+ config.width +'px; height: '+ config.height +'px;'" canvasId="previewCanvas"></canvas>
+      <canvas :style="'width: '+ config.cell.width +'px; height: '+ config.cell.height +'px;'" canvasId="fieldCanvas"></canvas>
+    </view>
 
     <x-canvas v-if="lists" ref="ref-x-canvas" :lists="lists" width="2480" height="3508" auto @canvasImage="onCanvasImage"></x-canvas>
   </view>
@@ -44,6 +46,8 @@ export default {
     config: {
       x: 96,
       y: 96,
+      width: 2480,
+      height: 3508,
       cell: {
         width: 210,
         height: 210
@@ -59,19 +63,14 @@ export default {
     // this.onSetData()
   },
   methods: {
-    initCanvas() {
-      this.canvas = uni.createCanvasContext('myCanvas')
-      console.log(this.canvas)
-    },
     setField() {
-      const ctx = uni.createCanvasContext('myCanvas')
+      const ctx = uni.createCanvasContext('fieldCanvas')
       const cell = this.config.cell
-      ctx.moveTo(0, 0)
-      ctx.lineTo(cell.width, 0)
-      ctx.lineTo(cell.width, cell.height)
-      ctx.lineTo(0, cell.height)
-      ctx.lineTo(0, 0)
-      ctx.stroke()
+      ctx.setFillStyle('#fff')
+      ctx.fillRect(0, 0, cell.width, cell.height)
+      ctx.setLineWidth(2)
+      ctx.setStrokeStyle('#000')
+      ctx.strokeRect(0, 0, cell.width, cell.height)
       ctx.setLineDash([2, 4], 10)
       ctx.beginPath();
       ctx.moveTo(cell.width / 2,0);
@@ -85,20 +84,47 @@ export default {
         uni.canvasToTempFilePath({
           x: 0,
           y: 0,
-          width: 100,
-          height: 100,
+          width: cell.width,
+          height: cell.height,
           fileType: 'jpg',
-          canvasId: 'myCanvas',
+          canvasId: 'fieldCanvas',
           success: (res) => {
-            console.log(res.tempFilePath)
+            this.initCanvas(res.tempFilePath)
           },
-          fail: (res) => {
-            console.warn(res);
+          fail: (err) => {
+            console.warn(err);
           }
         });
       })
+    },
+    initCanvas(file) {
+      const ctx = uni.createCanvasContext('previewCanvas')
+      const config = this.config
+      for (let i = 0; i < 11; i++) {
+        for (let j = 0; j < 14; j++) {
+          const dx = config.x + i * (config.cell.width - 2)
+          const dy = config.y + j * (config.cell.height - 2) + (j * 30)
+          ctx.drawImage(file, dx, dy, config.cell.width, config.cell.height)
+        }
+      }
 
-      console.log(ctx)
+      ctx.draw(false, () => {
+        uni.canvasToTempFilePath({
+          x: 0,
+          y: 0,
+          width: config.width,
+          height: config.height,
+          fileType: 'jpg',
+          canvasId: 'previewCanvas',
+          success: (res) => {
+            console.log(res.tempFilePath)
+            this.src = res.tempFilePath
+          },
+          fail: (err) => {
+            console.warn(err);
+          }
+        });
+      })
     },
     onCanvasImage(res) {
       this.src = res
@@ -141,7 +167,6 @@ export default {
     .preview{
       flex: 1; background-color: #f9f9f9;
       .pic{ width: 100%; height: 100%;}
-      canvas{ width: 420px; height: 420px; display: block !important;}
     }
     .textarea{ padding: 20px;}
     .tools{
@@ -151,5 +176,6 @@ export default {
         &:last-child{ margin-bottom: 0;}
       }
     }
+    .canvas-list{ width: 0; height: 0; overflow: hidden;}
   }
 </style>
