@@ -2,7 +2,7 @@
   <view class="m-stickers">
     <x-navigation-bar title="字帖" />
     <view class="preview">
-      <canvas type="2d" canvasId="myCanvas"></canvas>
+      <canvas canvasId="myCanvas"></canvas>
       <view v-if="src" class="pic">
         <x-image :src="src" mode="aspectFit" />
       </view>
@@ -55,13 +55,50 @@ export default {
   computed: {},
   watch: {},
   created () {
-    this.initCanvas()
+    this.setField()
     // this.onSetData()
   },
   methods: {
     initCanvas() {
       this.canvas = uni.createCanvasContext('myCanvas')
       console.log(this.canvas)
+    },
+    setField() {
+      const ctx = uni.createCanvasContext('myCanvas')
+      const cell = this.config.cell
+      ctx.moveTo(0, 0)
+      ctx.lineTo(cell.width, 0)
+      ctx.lineTo(cell.width, cell.height)
+      ctx.lineTo(0, cell.height)
+      ctx.lineTo(0, 0)
+      ctx.stroke()
+      ctx.setLineDash([2, 4], 10)
+      ctx.beginPath();
+      ctx.moveTo(cell.width / 2,0);
+      ctx.lineTo(cell.width / 2, cell.height)
+      ctx.moveTo(0, cell.height / 2);
+      ctx.lineTo(cell.width, cell.height / 2)
+      ctx.setStrokeStyle('#999');
+      ctx.stroke();
+
+      ctx.draw(false, () => {
+        uni.canvasToTempFilePath({
+          x: 0,
+          y: 0,
+          width: 100,
+          height: 100,
+          fileType: 'jpg',
+          canvasId: 'myCanvas',
+          success: (res) => {
+            console.log(res.tempFilePath)
+          },
+          fail: (res) => {
+            console.warn(res);
+          }
+        });
+      })
+
+      console.log(ctx)
     },
     onCanvasImage(res) {
       this.src = res
@@ -104,7 +141,7 @@ export default {
     .preview{
       flex: 1; background-color: #f9f9f9;
       .pic{ width: 100%; height: 100%;}
-      canvas{ width: 210px; height: 210px; display: block !important;}
+      canvas{ width: 420px; height: 420px; display: block !important;}
     }
     .textarea{ padding: 20px;}
     .tools{
