@@ -9,5 +9,5 @@
 
 <img src='3711599182501_.pic.jpg'>
 
-<img src='20210128.png.png'>
+<img src='20210128.png'>
 
