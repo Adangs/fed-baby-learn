@@ -45,6 +45,8 @@ export default {
       width: 2480,
       height: 3508,
       cell: {
+        fontSize: 100, // 文字大小
+        fontColor: '#000', // 文字颜色
         spacing: 30, // 间距
         lineWidth: 4, // 边框宽
         width: 180,
@@ -57,50 +59,74 @@ export default {
   computed: {},
   watch: {},
   created () {
-    this.setField()
+    this.initCanvas()
   },
   methods: {
-    setField() {
-      const ctx = uni.createCanvasContext('fieldCanvas')
-      const cell = this.config.cell
-      // 画底色
-      ctx.setFillStyle('#fff')
-      ctx.setLineWidth(cell.lineWidth)
-      ctx.fillRect(0, 0, cell.width, cell.height)
-      // 画边框
-      ctx.setStrokeStyle('#000')
-      ctx.strokeRect(0, 0, cell.width, cell.height)
-      // 画虚线
-      ctx.setLineDash([3, 6], 1)
-      ctx.beginPath();
-      ctx.moveTo(cell.width / 2, cell.lineWidth);
-      ctx.lineTo(cell.width / 2, cell.height - cell.lineWidth)
-      ctx.moveTo(cell.lineWidth, cell.height / 2);
-      ctx.lineTo(cell.width - cell.lineWidth, cell.height / 2)
-      ctx.setStrokeStyle('#666');
-      ctx.stroke();
+    // 生成单个田字格
+    setField(opts) {
+      return new Promise((resolve, reject) => {
+        const ctx = uni.createCanvasContext('fieldCanvas')
+        const cell = this.config.cell
+        // 画底色
+        ctx.setFillStyle('#fff')
+        ctx.setLineWidth(cell.lineWidth)
+        ctx.fillRect(0, 0, cell.width, cell.height)
+        // 画边框
+        ctx.setStrokeStyle('#000')
+        ctx.strokeRect(0, 0, cell.width, cell.height)
+        // 画虚线
+        ctx.setLineDash([3, 6], 1)
+        ctx.beginPath();
+        ctx.moveTo(cell.width / 2, cell.lineWidth);
+        ctx.lineTo(cell.width / 2, cell.height - cell.lineWidth)
+        ctx.moveTo(cell.lineWidth, cell.height / 2);
+        ctx.lineTo(cell.width - cell.lineWidth, cell.height / 2)
+        ctx.setStrokeStyle('#666');
+        ctx.stroke();
+        // 设置文字
+        if (opts) {
+          ctx.moveTo(0, 0)
+          ctx.setFontSize(opts.fontSize || cell.fontSize)
+          ctx.setFillStyle(opts.fontColor || cell.fontColor)
+          ctx.setTextAlign('center')
+          ctx.setTextBaseline('normal')
+          const metrics = ctx.measureText(opts.content)
+          let tx = 1 / 2 * metrics.width
+          let ty = 7 / 8 * metrics.width
+          tx = tx + (cell.width - metrics.width) / 2
+          ty = ty + (cell.height - metrics.width) / 2
+          ctx.fillText(opts.content, tx, ty)
+        }
 
-      ctx.draw(false, () => {
-        // 生成单个田字格
-        uni.canvasToTempFilePath({
-          x: 0,
-          y: 0,
-          width: cell.width,
-          height: cell.height,
-          fileType: 'jpg',
-          canvasId: 'fieldCanvas',
-          success: (res) => {
-            this.initCanvas(res.tempFilePath)
-          },
-          fail: (err) => {
-            console.warn(err);
-          }
-        });
+        ctx.draw(false, () => {
+          // 生成单个田字格
+          uni.canvasToTempFilePath({
+            x: 0,
+            y: 0,
+            width: cell.width,
+            height: cell.height,
+            fileType: 'jpg',
+            canvasId: 'fieldCanvas',
+            success: (res) => {
+              resolve(res.tempFilePath)
+            },
+            fail: (err) => {
+              reject(err)
+              console.warn(err);
+            }
+          });
+        })
       })
     },
-    initCanvas(file) {
-      const ctx = uni.createCanvasContext('previewCanvas')
+    async initCanvas() {
       const config = this.config
+      const file = await this.setField({
+        content: '永'
+      })
+      const ctx = uni.createCanvasContext('previewCanvas')
+      // 画底色
+      ctx.setFillStyle('#fff')
+      ctx.fillRect(0, 0, config.width, config.height)
       // 计算每行多少个
       const xLen = Math.ceil((config.width - config.x * 2) / config.cell.width)
       // 计算一共多少行
