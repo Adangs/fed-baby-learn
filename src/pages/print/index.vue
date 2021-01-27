@@ -8,12 +8,12 @@
         </view>
       </view>
       <view class="li">
-        <view class="item" @click="onNavigateTo('/packages/print/calculate/index')">
+        <view class="item" @click="onTips">
           <text>口算</text>
         </view>
       </view>
       <view class="li">
-        <view class="item">
+        <view class="item" @click="onTips">
           <text>涂色板</text>
         </view>
       </view>
@@ -46,6 +46,12 @@ export default {
       uni.navigateTo({
         url
       })
+    },
+    onTips() {
+      uni.showToast({
+        title: '开发中~',
+        icon: 'none'
+      });
     }
   }
 };
