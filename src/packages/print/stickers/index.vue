@@ -2,7 +2,7 @@
   <view class="m-stickers">
     <x-navigation-bar title="字帖" />
     <view class="preview">
-      <view v-if="src" class="pic">
+      <view v-if="src" class="pic" @click="onPreview">
         <x-image :src="src" mode="aspectFit" />
       </view>
     </view>
@@ -209,6 +209,15 @@ export default {
           icon: 'none'
         });
       }
+    },
+    // 预览图
+    onPreview () {
+      // uni.previewMedia({
+      //   current: 0,
+      //   sources: [{
+      //     url: this.src
+      //   }]
+      // });
     }
   }
 }
