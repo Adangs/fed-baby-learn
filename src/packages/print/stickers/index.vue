@@ -55,14 +55,27 @@ export default {
         height: 180
       }
     },
-    canvas: null
+    canvas: null,
+    sharePic: '/static/images/144x144.png'
   }
   },
   computed: {},
   watch: {},
-  created () {
+  async onLoad () {
     this.canvas = uni.createCanvasContext('previewCanvas')
+    this.sharePic = await this.setField({
+      content: '永',
+      color: '#ff0000'
+    })
     // this.initCanvas()
+  },
+  onShareAppMessage() {
+    const title = '我正在学练字...'
+    return {
+      title,
+      imageUrl: this.sharePic,
+      path: '/packages/print/stickers/index'
+    }
   },
   methods: {
     // 生成单个田字格

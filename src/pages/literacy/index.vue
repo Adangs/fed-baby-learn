@@ -89,7 +89,7 @@
       }
     },
     onShareAppMessage() {
-      const title = `这个字读【${this.word}】`
+      const title = `【${this.word}】这个字读什么？`
       return {
         title,
         imageUrl: '/static/images/144x144.png',
