@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     // 生成单个田字格
-    setField(opts) {
+    setField(font) {
       return new Promise((resolve, reject) => {
         const ctx = uni.createCanvasContext('fieldCanvas')
         const cell = this.config.cell
@@ -72,6 +72,7 @@ export default {
         ctx.setLineWidth(cell.lineWidth)
         ctx.fillRect(0, 0, cell.width, cell.height)
         // 画边框
+        ctx.setLineDash([0, 0], 0)
         ctx.setStrokeStyle('#000')
         ctx.strokeRect(0, 0, cell.width, cell.height)
         // 画虚线
@@ -84,18 +85,17 @@ export default {
         ctx.setStrokeStyle('#666');
         ctx.stroke();
         // 设置文字
-        if (opts) {
-          ctx.moveTo(0, 0)
-          ctx.setFontSize(opts.fontSize || cell.fontSize)
-          ctx.setFillStyle(opts.fontColor || cell.fontColor)
+        if (font) {
+          ctx.setFontSize(font.size || cell.fontSize)
+          ctx.setFillStyle(font.color || cell.fontColor)
           ctx.setTextAlign('center')
           ctx.setTextBaseline('normal')
-          const metrics = ctx.measureText(opts.content)
+          const metrics = ctx.measureText(font.content)
           let tx = 1 / 2 * metrics.width
           let ty = 7 / 8 * metrics.width
           tx = tx + (cell.width - metrics.width) / 2
           ty = ty + (cell.height - metrics.width) / 2
-          ctx.fillText(opts.content, tx, ty)
+          ctx.fillText(font.content, tx, ty)
         }
 
         ctx.draw(false, () => {
@@ -120,8 +120,13 @@ export default {
     },
     async initCanvas() {
       const config = this.config
-      const file = await this.setField({
+      const field = await this.setField()
+      const firstText = await this.setField({
         content: '永'
+      })
+      const weakText = await this.setField({
+        content: '永',
+        color: '#999'
       })
       const ctx = uni.createCanvasContext('previewCanvas')
       // 画底色
@@ -135,6 +140,18 @@ export default {
         for (let j = 0; j < yLen; j++) {
           const dx = config.x + i * (config.cell.width - config.cell.lineWidth)
           const dy = config.y + j * (config.cell.height - config.cell.lineWidth) + (j * config.cell.spacing)
+          let file
+          switch (i) {
+            case 0:
+              file = firstText
+              break
+            case 1:
+              file = weakText
+              break
+            default:
+              file = field
+              break
+          }
           ctx.drawImage(file, dx, dy, config.cell.width, config.cell.height)
         }
       }
