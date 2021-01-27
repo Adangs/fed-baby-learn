@@ -137,7 +137,7 @@ export default {
         });
         const weak = await this.setField({
           content: list[i],
-          color: '#999'
+          color: '#aaa'
         })
         files.push({
           first,
