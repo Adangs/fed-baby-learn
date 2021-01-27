@@ -45,8 +45,10 @@ export default {
       width: 2480,
       height: 3508,
       cell: {
-        width: 210,
-        height: 210
+        spacing: 30, // 间距
+        lineWidth: 4, // 边框宽
+        width: 180,
+        height: 180
       }
     },
     canvas: null
@@ -61,21 +63,25 @@ export default {
     setField() {
       const ctx = uni.createCanvasContext('fieldCanvas')
       const cell = this.config.cell
+      // 画底色
       ctx.setFillStyle('#fff')
+      ctx.setLineWidth(cell.lineWidth)
       ctx.fillRect(0, 0, cell.width, cell.height)
-      ctx.setLineWidth(2)
+      // 画边框
       ctx.setStrokeStyle('#000')
       ctx.strokeRect(0, 0, cell.width, cell.height)
-      ctx.setLineDash([2, 4], 10)
+      // 画虚线
+      ctx.setLineDash([3, 6], 1)
       ctx.beginPath();
-      ctx.moveTo(cell.width / 2,0);
-      ctx.lineTo(cell.width / 2, cell.height)
-      ctx.moveTo(0, cell.height / 2);
-      ctx.lineTo(cell.width, cell.height / 2)
-      ctx.setStrokeStyle('#999');
+      ctx.moveTo(cell.width / 2, cell.lineWidth);
+      ctx.lineTo(cell.width / 2, cell.height - cell.lineWidth)
+      ctx.moveTo(cell.lineWidth, cell.height / 2);
+      ctx.lineTo(cell.width - cell.lineWidth, cell.height / 2)
+      ctx.setStrokeStyle('#666');
       ctx.stroke();
 
       ctx.draw(false, () => {
+        // 生成单个田字格
         uni.canvasToTempFilePath({
           x: 0,
           y: 0,
@@ -95,10 +101,14 @@ export default {
     initCanvas(file) {
       const ctx = uni.createCanvasContext('previewCanvas')
       const config = this.config
-      for (let i = 0; i < 11; i++) {
-        for (let j = 0; j < 14; j++) {
-          const dx = config.x + i * (config.cell.width - 2)
-          const dy = config.y + j * (config.cell.height - 2) + (j * 30)
+      // 计算每行多少个
+      const xLen = Math.ceil((config.width - config.x * 2) / config.cell.width)
+      // 计算一共多少行
+      const yLen = Math.ceil((config.height - config.y * 2) / (config.cell.height + config.cell.spacing))
+      for (let i = 0; i < xLen; i++) {
+        for (let j = 0; j < yLen; j++) {
+          const dx = config.x + i * (config.cell.width - config.cell.lineWidth)
+          const dy = config.y + j * (config.cell.height - config.cell.lineWidth) + (j * config.cell.spacing)
           ctx.drawImage(file, dx, dy, config.cell.width, config.cell.height)
         }
       }
