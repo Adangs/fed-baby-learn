@@ -7,10 +7,11 @@
       </view>
     </view>
     <view class="textarea">
-      <x-textarea :value.sync="value" height="200" placeholder="请输入汉字，最多不超过14个" maxlength="14"></x-textarea>
+      <x-textarea :value.sync="value" :maxlength="maxlength" height="200" placeholder="1、请输入汉字"></x-textarea>
     </view>
     <view class="tools">
-      <view class="li"><x-button @click="onSavePic">保存图片</x-button></view>
+      <view class="li"><x-button @click="initCanvas">2、生成字帖</x-button></view>
+      <view class="li"><x-button type="primary" @click="onSavePic">3、保存图片</x-button></view>
     </view>
     <view class="canvas-list">
       <canvas :style="'width: '+ config.width +'px; height: '+ config.height +'px;'" canvasId="previewCanvas"></canvas>
@@ -39,6 +40,7 @@ export default {
     src: null,
     value: null,
     lists: null,
+    maxlength: 16,
     config: {
       x: 96,
       y: 96,
@@ -59,6 +61,7 @@ export default {
   computed: {},
   watch: {},
   created () {
+    this.canvas = uni.createCanvasContext('previewCanvas')
     this.initCanvas()
   },
   methods: {
@@ -119,16 +122,28 @@ export default {
       })
     },
     async initCanvas() {
+      uni.showLoading({
+        title: '字帖生成中...',
+      })
+      const ctx = this.canvas
       const config = this.config
       const field = await this.setField()
-      const firstText = await this.setField({
-        content: '永'
-      })
-      const weakText = await this.setField({
-        content: '永',
-        color: '#999'
-      })
-      const ctx = uni.createCanvasContext('previewCanvas')
+      const files = []
+      const text = this.value ? this.value.replace(/\s/gi, '') : ''
+      const list = text.split('')
+      for (let i = 0; i < list.length; i++) {
+        const first = await this.setField({
+          content: list[i]
+        });
+        const weak = await this.setField({
+          content: list[i],
+          color: '#999'
+        })
+        files.push({
+          first,
+          weak
+        })
+      }
       // 画底色
       ctx.setFillStyle('#fff')
       ctx.fillRect(0, 0, config.width, config.height)
@@ -143,10 +158,10 @@ export default {
           let file
           switch (i) {
             case 0:
-              file = firstText
+              file = files[j] ? files[j].first : field
               break
             case 1:
-              file = weakText
+              file = files[j] ? files[j].weak : field
               break
             default:
               file = field
@@ -170,6 +185,9 @@ export default {
           },
           fail: (err) => {
             console.warn(err);
+          },
+          complete: () => {
+            uni.hideLoading()
           }
         });
       })
@@ -206,9 +224,9 @@ export default {
     }
     .textarea{ padding: 20px;}
     .tools{
-      padding: 40px;
+      padding: 10px; display: flex; align-items: center;
       .li{
-        margin-bottom: 10px;
+        flex: 1; padding: 10px;
         &:last-child{ margin-bottom: 0;}
       }
     }

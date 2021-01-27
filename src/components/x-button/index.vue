@@ -49,7 +49,7 @@
       },
       type: {
         type: String,
-        default: 'primary'
+        default: 'default'
       },
       lang: {
         type: String,
