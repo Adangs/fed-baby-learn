@@ -62,7 +62,7 @@ export default {
   watch: {},
   created () {
     this.canvas = uni.createCanvasContext('previewCanvas')
-    this.initCanvas()
+    // this.initCanvas()
   },
   methods: {
     // 生成单个田字格
@@ -197,15 +197,15 @@ export default {
         uni.saveImageToPhotosAlbum({
           filePath: this.src,
           success: () => {
-            uni.showToast({
-              title: '图片保存成功，请自行打印~',
-              icon: 'success'
+            uni.showModal({
+              content: '字帖保存成功，请自行打印~',
+              showCancel: false
             });
           }
         })
       } else {
         uni.showToast({
-          title: '请先生成图片~',
+          title: '请先生成字帖~',
           icon: 'none'
         });
       }
