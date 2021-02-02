@@ -18,6 +18,12 @@
             <x-icon :name="isRandom ? 'icon-038' : 'icon-037'" size="60" />
           </view>
         </view>
+        <!-- 自动播放-->
+        <view :class="{'is-auto': autoPlay}" class="icon auto-play" @click="onSetAuto">
+          <view class="x-icon">
+            <x-icon name="icon-032" size="50" />
+          </view>
+        </view>
         <!--重置-->
         <view class="icon refresh" @click="onRefresh">
           <view class="x-icon">
@@ -73,7 +79,8 @@
         audio: null,
         current: null,
         word: '永',
-        isRandom: uni.getStorageSync('storage-is-random') || false
+        isRandom: uni.getStorageSync('storage-is-random') || false,
+        autoPlay: uni.getStorageSync('storage-is-auto-play') || false
       }
     },
     computed: {
@@ -149,7 +156,9 @@
         this.index = index
         this.word = this.list[this.index]
         uni.setStorageSync('storage-orderly-index', this.index)
-        this.onPlay()
+        if (this.autoPlay) {
+          this.onPlay()
+        }
       },
       // 下一个
       onNext() {
@@ -166,7 +175,9 @@
           this.word = this.list[this.index]
           uni.setStorageSync('storage-orderly-index', this.index)
         }
-        // this.onPlay()
+        if (this.autoPlay) {
+          this.onPlay()
+        }
       },
       onSetRandom() {
         this.isRandom = !this.isRandom
@@ -188,6 +199,13 @@
         uni.showToast({
           title: '重置成功'
         })
+      },
+      onSetAuto() {
+        this.autoPlay = !this.autoPlay
+        uni.setStorageSync('storage-is-auto-play', this.autoPlay)
+        uni.showToast({
+          title: this.autoPlay ? '自动播放' : '不自动播放'
+        })
       }
     }
   };
@@ -206,6 +224,10 @@
       .icon{
         position: absolute; width: 100px; height: 100px; bottom: 0; right: 0; text-align: center; display: flex; align-items: center;
         &.refresh{ right: auto; left: 0;}
+        &.auto-play{
+          left: 50%; transform: translate(-50%, 0); opacity: .5;
+          &.is-auto{ opacity: 1;}
+        }
         .x-icon{ width: 100%;}
       }
       .li{
