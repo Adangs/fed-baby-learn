@@ -5,7 +5,7 @@
         <x-icon name="icon-008" size="60" @click="onBack" />
       </view>
     </view>
-    <block v-if="query.type === 'one'">
+    <block v-if="query.type">
       <view class="word">
         <view class="li"></view>
         <view class="li"></view>
@@ -38,6 +38,11 @@
           </view>
         </view>
       </view>
+      <view v-if="tabs && tabs.length" class="tabs">
+        <view v-for="item in tabs" :key="item" class="li">
+          <view :class="{'active': current === item}" class="item" @click="onChangeList(item)">{{item}}</view>
+        </view>
+      </view>
       <view class="tips">音频来源百度翻译</view>
     </block>
     <block v-else>
@@ -66,6 +71,7 @@
         list: null,
         history: [],
         audio: null,
+        current: null,
         word: '永',
         isRandom: uni.getStorageSync('storage-is-random') || false
       }
@@ -73,20 +79,23 @@
     computed: {
       isDisabled() {
         return this.index === 0 && !this.isRandom
+      },
+      tabs() {
+        const list = []
+        for (const key in Thesaurus) {
+          list.push(key)
+        }
+        return list
       }
     },
     watch: {},
     onLoad(opt) {
       this.query = opt
-      this.list = Thesaurus[this.query.type].split(',')
-      // console.log(this.list.length)
+      this.current = this.query.type
       if (this.query.index) {
         this.index = +this.query.index
       }
-      this.word = this.list[this.index]
-      if (opt.type === 'one') {
-        // this.onPlay()
-      }
+      this.setList()
     },
     onShareAppMessage() {
       const title = `【${this.word}】这个字读什么？`
@@ -106,6 +115,17 @@
       }
     },
     methods: {
+      onChangeList(item) {
+        if (this.current !== item) {
+          this.current = item
+          this.index = 0
+          this.setList()
+        }
+      },
+      setList() {
+        this.list = Thesaurus[this.current].split('')
+        this.word = this.list[this.index]
+      },
       onPlay() {
         const audio = uni.createInnerAudioContext()
         audio.autoplay = true
@@ -232,7 +252,18 @@
         }
       }
     }
-    .tips{ position: absolute; bottom: 20px; color: #eee; width: 100%; text-align: center; font-size: 22px;}
+    .tabs{
+      display: flex; flex-wrap: wrap;
+      padding: 10px;
+      .li{
+        padding: 10px; width: 25%;
+        .item{
+          padding: 10px 20px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center;
+          &.active{ background-color: #C7EDCC; border-color: #C7EDCC;}
+        }
+      }
+    }
+    .tips{ color: #ddd; width: 100%; text-align: center; font-size: 22px; padding: 20px 0;}
     .x-empty{
       position: absolute; width: 100%; height: 100%;
       text{ position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); font-size: 50px; color: #999;}

@@ -76,7 +76,7 @@
     methods: {
       onLiteracy() {
         uni.navigateTo({
-          url: '/pages/literacy/index?type=one'
+          url: '/pages/literacy/index?type=1年级'
         })
       },
       onCompute() {
