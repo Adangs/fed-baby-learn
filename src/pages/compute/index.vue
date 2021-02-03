@@ -83,6 +83,7 @@
         </view>
         <view class="dt">恭喜您，完成一组</view>
         <view class="dd">{{ error > 0 ? `答错${error}次` : '全部回答正确'}}</view>
+        <view v-if="formatTimeCost" class="time">{{formatTimeCost}}</view>
         <view class="button">
           <x-button @click="onRefresh">再来一组</x-button>
         </view>
@@ -161,7 +162,7 @@
         error: 0,
         list: [],
         history: [],
-        XTimer: null
+        timeCost: null
       }
     },
     computed: {
@@ -179,6 +180,26 @@
       },
       size() {
         return `is-size-${this.diffIndex} is-end-${this.max}`
+      },
+      // 格式化用时
+      formatTimeCost() {
+        const arr = ['用时：']
+        if (this.timeCost) {
+          if (this.timeCost.hour) {
+            arr.push(`${this.timeCost.hour}:`)
+          }
+          if (this.timeCost.minute) {
+            arr.push(`${this.timeCost.minute}′`)
+          }
+          if (this.timeCost.second) {
+            arr.push(`${this.timeCost.second}″`)
+          }
+          if (this.timeCost.millisecond) {
+            arr.push(`${this.timeCost.millisecond}`)
+          }
+          return arr.join('')
+        }
+        return null
       }
     },
     watch: {},
@@ -344,6 +365,7 @@
       },
       // 计时结束回调
       onTimerEnd(res) {
+        this.timeCost = res
         console.log('用时-> ', res)
       }
     }
@@ -453,7 +475,8 @@
       .content{
         flex: 1; text-align: center;
         .dt{ font-size: 40px; padding: 20px 0; color: #000;}
-        .dd{ color: #999;}
+        .dd{ color: #999; padding-bottom: 20px;}
+        .time{ background-color: #C7EDCC; color: #000; border-radius: 30px; padding: 5px 25px; font-size: 26px; display: inline-block;}
         .button{ width: 300px; margin: 0 auto; padding-top: 100px;}
       }
     }
