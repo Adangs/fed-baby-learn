@@ -58,7 +58,7 @@
         </view>
         <!--计时器-->
         <view class="timer">
-          <x-timer ref="x-timer"></x-timer>
+          <x-timer ref="x-timer" @end="onTimerEnd"></x-timer>
         </view>
       </view>
     </view>
@@ -160,7 +160,8 @@
         },
         error: 0,
         list: [],
-        history: []
+        history: [],
+        XTimer: null
       }
     },
     computed: {
@@ -212,9 +213,9 @@
         this.list = []
         this.onSend()
         // 重新开始计时
-        const timer = this.$refs['x-timer']
-        if (timer) {
-          timer.onStart()
+        const XTimer = this.$refs['x-timer']
+        if (XTimer) {
+          XTimer.onStart()
         }
       },
       onBack() {
@@ -318,6 +319,14 @@
           })
           if (this.count.start < this.count.end) {
             this.count.start++
+            if (this.count.start === this.count.end) {
+              // 计时结束
+              const timer = this.$refs['x-timer']
+              if (timer) {
+                timer.onStop()
+              }
+              console.log('答题结束')
+            }
           } else {
 
           }
@@ -332,6 +341,10 @@
       },
       isTypeof(val) {
         return typeof val
+      },
+      // 计时结束回调
+      onTimerEnd(res) {
+        console.log('用时-> ', res)
       }
     }
   };
