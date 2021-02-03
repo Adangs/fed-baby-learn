@@ -56,6 +56,10 @@
             <view class="name">重置</view>
           </view>
         </view>
+        <!--计时器-->
+        <view class="timer">
+          <x-timer ref="x-timer"></x-timer>
+        </view>
       </view>
     </view>
     <!--结果列表-->
@@ -90,13 +94,15 @@
 <script>
   import XIcon from '@/components/x-icon'
   import XButton from '@/components/x-button'
+  import XTimer from '@/components/x-timer'
   import { evaluate } from '@/libs/eval5.min'
 
   export default {
     name: 'Compute',
     components: {
       XIcon,
-      XButton
+      XButton,
+      XTimer
     },
     props: {},
     data() {
@@ -205,6 +211,11 @@
         }
         this.list = []
         this.onSend()
+        // 重新开始计时
+        const timer = this.$refs['x-timer']
+        if (timer) {
+          timer.onStart()
+        }
       },
       onBack() {
         const pages = getCurrentPages();
@@ -383,6 +394,7 @@
           .x-icon{ width: 100%;}
           .name{ font-size: 22px; text-align: center; color: #999; padding-top: 5px;}
         }
+        .timer{ position: absolute; left: 50%; bottom: 130px; transform: translate(-50%, 0);}
       }
 
       &.is-size-0{
