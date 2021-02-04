@@ -50,7 +50,7 @@
           </view>
         </view>
         <!--换题-->
-        <view class="icon" @click="onRefresh">
+        <view class="icon" @click="onReadInit">
           <view class="x-icon">
             <x-icon name="icon-013" size="60" />
             <view class="name">重置</view>
@@ -85,12 +85,12 @@
         <view class="dd">{{ error > 0 ? `答错${error}次` : '全部回答正确'}}</view>
         <view v-if="formatTimeCost" class="time">{{formatTimeCost}}</view>
         <view class="button">
-          <x-button @click="onRefresh">再来一组</x-button>
+          <x-button @click="onReadInit">再来一组</x-button>
         </view>
       </view>
     </view>
     <!--准备开始-->
-    <x-ready></x-ready>
+    <x-ready v-if="isReady" max="3" @change="onReadGo"></x-ready>
   </view>
 </template>
 
@@ -166,7 +166,8 @@
         error: 0,
         list: [],
         history: [],
-        timeCost: null
+        timeCost: null,
+        isReady: true
       }
     },
     computed: {
@@ -208,7 +209,7 @@
     },
     watch: {},
     onLoad() {
-      this.onRefresh()
+
     },
     onShareAppMessage() {
       const title = `心算一下 ${this.current.join('')}=?`
@@ -228,6 +229,21 @@
       }
     },
     methods: {
+      // 准备倒计时
+      onReadInit() {
+        this.isReady = true
+        // 重新开始计时
+        const XTimer = this.$refs['x-timer']
+        if (XTimer) {
+          XTimer.onStop()
+        }
+      },
+      // 倒计时结束，开始生成题目
+      onReadGo() {
+        this.isReady = false
+        this.onRefresh()
+        console.log('开始答题~')
+      },
       onRefresh() {
         // 重置
         this.error = 0
@@ -263,7 +279,7 @@
         uni.showToast({
           title: `切换为${find.name}`
         })
-        this.onRefresh()
+        this.onReadInit()
       },
       // 切换题目数
       onChangeEnd({ detail }) {
@@ -273,7 +289,7 @@
         uni.showToast({
           title: `切换为${find.name}`
         })
-        this.onRefresh()
+        this.onReadInit()
       },
       // 切换题目数
       onChangeDiff({ detail }) {
@@ -283,7 +299,7 @@
         uni.showToast({
           title: `切换为${find.name}`
         })
-        this.onRefresh()
+        this.onReadInit()
       },
       // 开始生成题目
       onSend() {
@@ -361,6 +377,10 @@
             icon: 'none',
             title: '错误，再想想',
             duration: 800
+          })
+          // 错误进行震动提示
+          uni.vibrateShort({
+            type: 'light'
           })
         }
       },
