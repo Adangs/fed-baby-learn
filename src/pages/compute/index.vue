@@ -89,6 +89,8 @@
         </view>
       </view>
     </view>
+    <!--准备开始-->
+    <x-ready></x-ready>
   </view>
 </template>
 
@@ -96,6 +98,7 @@
   import XIcon from '@/components/x-icon'
   import XButton from '@/components/x-button'
   import XTimer from '@/components/x-timer'
+  import XReady from '@/components/x-ready'
   import { evaluate } from '@/libs/eval5.min'
 
   export default {
@@ -103,7 +106,8 @@
     components: {
       XIcon,
       XButton,
-      XTimer
+      XTimer,
+      XReady
     },
     props: {},
     data() {
