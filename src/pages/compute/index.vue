@@ -87,6 +87,12 @@
         <view class="button">
           <x-button @click="onReadInit">再来一组</x-button>
         </view>
+        <view v-if="history && history.length" class="history-list">
+          <view class="li">
+            <text class="index">1</text>
+            <text>1′2″20</text>
+          </view>
+        </view>
       </view>
     </view>
     <!--准备开始-->
@@ -165,7 +171,7 @@
         },
         error: 0,
         list: [],
-        history: [],
+        history: null,
         timeCost: null,
         isReady: true
       }
@@ -188,7 +194,7 @@
       },
       // 格式化用时
       formatTimeCost() {
-        const arr = ['用时：']
+        const arr = ['本次用时：']
         if (this.timeCost) {
           if (this.timeCost.hour) {
             arr.push(`${this.timeCost.hour}:`)
@@ -502,6 +508,15 @@
         .dd{ color: #999; padding-bottom: 20px;}
         .time{ background-color: #C7EDCC; color: #000; border-radius: 30px; padding: 5px 25px; font-size: 26px; display: inline-block;}
         .button{ width: 300px; margin: 0 auto; padding-top: 100px;}
+        .history-list{
+          padding: 50px 0; width: 400px; margin: 0 auto;
+          .li{
+            display: flex; align-items: center; padding: 10px; font-size: 24px; color: #999;
+            &:nth-child(odd){ background-color: #fafafa;}
+            &:nth-child(1){ color: #f44336;}
+            .index{ flex: 1; text-align: left;}
+          }
+        }
       }
     }
   }
