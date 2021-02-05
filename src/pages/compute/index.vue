@@ -13,6 +13,7 @@
       <view class="topic">
         <view v-for="(item, index) in current" :key="index" :class="{'symbol': isTypeof(item) === 'string'}">{{ item }}</view>
         <view class="symbol">=</view>
+        <view class="answer">{{ answer }}</view>
       </view>
       <!--顶部-->
       <view class="header flex" :style="'top:' + statusBarHeight + 'px'">
@@ -75,6 +76,24 @@
         </template>
       </view>
     </view>
+    <!--数字键盘-->
+    <view class="keyboard">
+      <view class="ul">
+        <template v-for="item in 10">
+          <view v-if="item > 0" :key="item" class="li">
+            <view class="item" @click="onSetAnswer(item)">{{ item }}</view>
+          </view>
+        </template>
+      </view>
+      <view class="flex">
+        <view class="zero">
+          <view class="item" @click="onSetAnswer(0)">0</view>
+        </view>
+        <view class="ac">
+          <view class="item" @click="onSetAnswer('ac')">AC</view>
+        </view>
+      </view>
+    </view>
     <!--完成-->
     <view v-if="count.start === count.end" class="finish">
       <view class="content">
@@ -96,7 +115,7 @@
       </view>
     </view>
     <!--准备开始-->
-    <x-ready v-if="isReady" max="3" @change="onReadGo"></x-ready>
+    <x-ready v-if="isReady" :max="3" @change="onReadGo"></x-ready>
   </view>
 </template>
 
@@ -174,7 +193,8 @@
         history: null,
         timeCost: null,
         isReady: true,
-        currentHistory: null
+        currentHistory: null,
+        answer: '?'
       }
     },
     computed: {
@@ -365,10 +385,10 @@
         const answer = evaluate(this.current.join(''))
         console.log(answer)
         if (answer === val) {
-          uni.showToast({
-            title: '回答正确',
-            duration: 800
-          })
+          // uni.showToast({
+          //   title: '回答正确',
+          //   duration: 800
+          // })
           if (this.count.start < this.count.end) {
             this.count.start++
             if (this.count.start === this.count.end) {
@@ -381,16 +401,51 @@
               this.setHistory()
               console.log('答题结束')
             }
-          } else {
-
           }
         } else {
           this.error++
-          uni.showToast({
-            icon: 'none',
-            title: '错误，再想想',
-            duration: 800
+          // uni.showToast({
+          //   icon: 'none',
+          //   title: '错误，再想想',
+          //   duration: 800
+          // })
+          // 错误进行震动提示
+          uni.vibrateShort({
+            type: 'light'
           })
+        }
+      },
+      // 设置答案
+      onSetAnswer(val) {
+        if (val === 'ac') {
+          this.answer = '?'
+        } else {
+          const answer = this.answer === '?' ? '' : this.answer
+          this.answer = String(answer) + String(val)
+          this.ifAnswer()
+        }
+      },
+      // 判断答案
+      ifAnswer() {
+        const val = evaluate(this.current.join(''))
+        const answer = Number(this.answer)
+        if (answer === val) {
+          if (this.count.start < this.count.end) {
+            this.count.start++
+            this.answer = '?'
+            if (this.count.start === this.count.end) {
+              // 计时结束
+              const timer = this.$refs['x-timer']
+              if (timer) {
+                timer.onStop()
+              }
+              // 更新历史记录
+              this.setHistory()
+              console.log('答题结束')
+            }
+          }
+        } else if (answer > val) {
+          this.answer = '?'
           // 错误进行震动提示
           uni.vibrateShort({
             type: 'light'
@@ -500,31 +555,36 @@
 
       &.is-size-0{
         .topic{ font-size: 120px;}
+        .answer{ width: 120px;}
       }
       &.is-size-1{
         .topic{ font-size: 96px;}
+        .answer{ width: 96px;}
       }
       &.is-size-2{
         .topic{ font-size: 75px;}
+        .answer{ width: 75px;}
 
         &.is-end-10,
         &.is-end-20,
         &.is-end-30{
           .topic{ font-size: 90px;}
+          .answer{ width: 90px;}
         }
       }
       &.is-size-3{
         .topic{ font-size: 62px;}
-
+        .answer{ width: 62px;}
         &.is-end-10,
         &.is-end-20,
         &.is-end-30{
           .topic{ font-size: 75px;}
+          .answer{ width: 75px;}
         }
       }
     }
     .result{
-      font-size: 58px; flex: 1; overflow: auto; padding: 10px;
+      font-size: 58px; flex: 1; overflow: auto; padding: 10px; display: none;
       .ul{ display: flex; flex-wrap: wrap; }
       .li{ padding: 10px; width: 20%;}
       .item{
@@ -535,6 +595,18 @@
         padding: 10px;
         .item{ width: 100%;}
       }
+    }
+    // 数据键盘
+    .keyboard{
+      .item{
+        background-color: #f8f8f8; height: 120px; line-height: 120px; text-align: center;
+        &:active{ background-color: #eee;}
+      }
+      .ul{ display: flex; flex-wrap: wrap; font-size: 58px; padding: 10px;}
+      .li{ width: 33.33333%; text-align: center; padding: 10px;}
+      .flex{ display: flex; flex-wrap: wrap; padding: 0 10px; font-size: 58px;}
+      .zero{ width: 66.66666%; padding: 0 10px;}
+      .ac{ width: 33.33333%; padding: 0 10px;}
     }
     .finish{
       position: absolute; width: 100%; height: 100%; background-color: #fff; display: flex; align-items: center;

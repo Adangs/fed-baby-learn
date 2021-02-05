@@ -56,10 +56,10 @@ export default {
       if (this.int) {
         clearInterval(this.int)
       }
-      this.int = setInterval(this.timer,50);
+      this.int = setInterval(this.timer,20);
     },
     timer() {
-      this.time.millisecond += 50;
+      this.time.millisecond += 20;
       if (this.time.millisecond >= 1000) {
         this.time.millisecond = 0;
         this.time.second += 1;
