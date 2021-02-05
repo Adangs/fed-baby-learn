@@ -433,6 +433,10 @@
         const val = evaluate(this.current.join(''))
         const answer = Number(this.answer)
         if (answer === val) {
+          uni.showToast({
+            title: '回答正确',
+            duration: 800
+          })
           if (this.count.start < this.count.end) {
             this.count.start++
             this.answer = '?'
@@ -452,7 +456,7 @@
           uni.showToast({
             icon: 'none',
             title: '错误，再想想',
-            duration: 600
+            duration: 800
           })
         }
       },
