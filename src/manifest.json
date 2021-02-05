@@ -6,7 +6,7 @@
   "versionCode" : "100",
   "transformPx" : true,
   "uniStatistics" : {
-    "enable" : true
+    "enable" : false
   },
   "mp-weixin" : {
     "appid" : "wxe909acd671d1a5a1",
