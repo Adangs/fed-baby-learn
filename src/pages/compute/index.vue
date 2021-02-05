@@ -87,10 +87,10 @@
         <view class="button">
           <x-button @click="onReadInit">再来一组</x-button>
         </view>
-        <view v-if="history && history.length" class="history-list">
-          <view class="li">
-            <text class="index">1</text>
-            <text>1′2″20</text>
+        <view v-if="currentHistory && currentHistory.length" class="history-list">
+          <view v-for="(item, index) in currentHistory" :key="index" class="li">
+            <text class="index">{{index + 1}}</text>
+            <text>{{getFormatTimeCost(item)}}</text>
           </view>
         </view>
       </view>
@@ -173,7 +173,8 @@
         list: [],
         history: null,
         timeCost: null,
-        isReady: true
+        isReady: true,
+        currentHistory: null
       }
     },
     computed: {
@@ -211,11 +212,15 @@
           return arr.join('')
         }
         return null
+      },
+      // 缓存计时数据key
+      historyKey() {
+        return `${this.diffIndex}-${this.rangeIndex}-${this.endIndex}`
       }
     },
     watch: {},
     onLoad() {
-
+      this.history = uni.getStorageSync('storage-compute-history') || {}
     },
     onShareAppMessage() {
       const title = `心算一下 ${this.current.join('')}=?`
@@ -372,6 +377,8 @@
               if (timer) {
                 timer.onStop()
               }
+              // 更新历史记录
+              this.setHistory()
               console.log('答题结束')
             }
           } else {
@@ -395,8 +402,37 @@
       },
       // 计时结束回调
       onTimerEnd(res) {
-        this.timeCost = res
-        console.log('用时-> ', res)
+        this.timeCost = {
+          ...res,
+          count: res.millisecond + (res.second * 1000) + (res.minute * 60000) + (res.hour * 120000)
+        }
+        console.log('用时-> ', this.timeCost)
+      },
+      // 记录计时数据
+      setHistory() {
+        const current = this.history[this.historyKey] || []
+        current.push(this.timeCost)
+        current.sort((a, b) => a.count - b.count)
+        this.history[this.historyKey] = current.slice(0, 5)
+        this.currentHistory = this.history[this.historyKey]
+        uni.setStorageSync('storage-compute-history', this.history)
+      },
+      // 格式化时间格式
+      getFormatTimeCost(item) {
+        const arr = []
+        if (item.hour) {
+          arr.push(`${item.hour}:`)
+        }
+        if (item.minute) {
+          arr.push(`${item.minute}′`)
+        }
+        if (item.second) {
+          arr.push(`${item.second}″`)
+        }
+        if (item.millisecond) {
+          arr.push(`${item.millisecond}`)
+        }
+        return arr.join('')
       }
     }
   };
