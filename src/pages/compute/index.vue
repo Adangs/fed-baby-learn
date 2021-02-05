@@ -424,6 +424,9 @@
           this.answer = String(answer) + String(val)
           this.ifAnswer()
         }
+        uni.vibrateShort({
+          type: 'light'
+        })
       },
       // 判断答案
       ifAnswer() {
@@ -446,9 +449,10 @@
           }
         } else if (answer > val) {
           this.answer = '?'
-          // 错误进行震动提示
-          uni.vibrateShort({
-            type: 'light'
+          uni.showToast({
+            icon: 'none',
+            title: '错误，再想想',
+            duration: 600
           })
         }
       },
