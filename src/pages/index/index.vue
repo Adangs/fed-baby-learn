@@ -27,7 +27,7 @@
             <view class="icon">
               <x-icon name="icon-044" color="#555" />
             </view>
-            <view>v1.2.5</view>
+            <view>v1.2.6</view>
           </view>
         </x-button>
       </view>
