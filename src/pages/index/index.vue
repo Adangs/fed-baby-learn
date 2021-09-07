@@ -19,6 +19,11 @@
           <text>打印</text>
         </view>
       </view>
+      <view class="li">
+        <view class="item" @click="onNavigateTo('')">
+          <text>音频</text>
+        </view>
+      </view>
     </view>
     <view class="version">
       <view class="inline-block">
@@ -88,6 +93,11 @@
         uni.navigateTo({
           url: '/pages/print/index'
         })
+      },
+      onNavigateTo(url) {
+        uni.navigateTo({
+          url
+        })
       }
     }
   };
@@ -101,7 +111,7 @@
     .ul{
       display: flex; flex-wrap: wrap; width: 100%; padding: 0 50px;
     }
-    .li{ flex: 1; padding: 20px;}
+    .li{ width: 33.333%; padding: 20px;}
     .item{
       width: 150px; height: 150px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center; margin: 0 auto;
       &:active{ opacity: .8;}

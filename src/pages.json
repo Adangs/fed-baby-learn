@@ -7,6 +7,8 @@
     "path": "pages/literacy/index"
   },{
     "path": "pages/print/index"
+  },{
+    "path": "pages/audio/index"
   }],
   "subPackages": [{
     "root": "packages/print",
