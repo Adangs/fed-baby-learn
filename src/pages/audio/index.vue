@@ -1,7 +1,7 @@
 <template>
   <view class="m-list">
     <x-navigation-bar title="音频" />
-    <view class="ul">
+    <view v-if="lists" class="ul">
       <view v-for="(item, index) in lists" :key="index" class="li">
         <view class="item" @click="onPlay(item)">
           <view class="pic">
@@ -35,17 +35,7 @@ export default {
   props: {},
   data () {
   return {
-    lists: [{
-      category: '语文',
-      url: 'https://alicdn.madaomall.com/static/videos/2021/YW-001.mp3',
-      title: '弟子规',
-      play: false
-    }, {
-      category: '英语',
-      url: 'https://alicdn.madaomall.com/static/videos/2021/YY-001.wav',
-      title: '英语课程教科书一年级 A',
-      play: false
-    }],
+    lists: null,
     play: false,
     current: null
   };
@@ -53,7 +43,7 @@ export default {
   computed: {},
   watch: {},
   onLoad () {
-
+    this.getList()
   },
   onHide() {
 
@@ -62,6 +52,14 @@ export default {
 
   },
   methods: {
+    getList() {
+      uni.request({
+        url: 'https://alicdn.madaomall.com/static/videos/2021/list.json',
+        success: (res) => {
+          this.lists = res.data
+        }
+      })
+    },
     onPlay(item) {
       if (this.current && this.current.url !== item.url) {
         this.current.play = false
