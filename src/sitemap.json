@@ -1,0 +1,18 @@
+{
+  "rules": [{
+    "action": "allow",
+    "page": "pages/index/index"
+  }, {
+    "action": "allow",
+    "page": "pages/audio/index"
+  }, {
+    "action": "allow",
+    "page": "pages/compute/index"
+  }, {
+    "action": "allow",
+    "page": "pages/literacy/index"
+  }, {
+    "action": "allow",
+    "page": "pages/print/index"
+  }]
+}
