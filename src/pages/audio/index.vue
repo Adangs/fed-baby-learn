@@ -61,7 +61,7 @@ export default {
       })
     },
     onPlay(item) {
-      uni.setInnerAudioOption({
+      wx.setInnerAudioOption({
         mixWithOther: true,
         obeyMuteSwitch: false,
         speakerOn: true
