@@ -20,7 +20,7 @@
         </view>
       </view>
       <view class="li">
-        <view class="item" @click="onNavigateTo('')">
+        <view class="item" @click="onNavigateTo('/pages/audio/index')">
           <text>音频</text>
         </view>
       </view>
@@ -32,7 +32,7 @@
             <view class="icon">
               <x-icon name="icon-044" color="#555" />
             </view>
-            <view>v1.2.6</view>
+            <view>v1.2.7</view>
           </view>
         </x-button>
       </view>

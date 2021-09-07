@@ -56,6 +56,13 @@ export default {
   },
   onHide() {
     if (this.audio && this.audio.destroy) {
+      this.audio.stop()
+      this.audio.destroy()
+    }
+  },
+  onUnload() {
+    if (this.audio && this.audio.destroy) {
+      this.audio.stop()
       this.audio.destroy()
     }
   },
