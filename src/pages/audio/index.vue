@@ -47,31 +47,19 @@ export default {
       play: false
     }],
     play: false,
-    audio: null,
     current: null
   };
   },
   computed: {},
   watch: {},
   onLoad () {
-    // this.audio = uni.createInnerAudioContext()
-    // this.audio.autoplay = true
-    // this.audio.obeyMuteSwitch = false
-    // this.audio.onPlay(() => {
-    //   console.log('开始播放')
-    // })
+
   },
   onHide() {
-    if (this.audio && this.audio.destroy) {
-      this.audio.stop()
-      this.audio.destroy()
-    }
+
   },
   onUnload() {
-    if (this.audio && this.audio.destroy) {
-      this.audio.stop()
-      this.audio.destroy()
-    }
+
   },
   methods: {
     onPlay(item) {
@@ -88,12 +76,10 @@ export default {
         this.$nextTick(() => {
           this.$refs['x-audio'].audioPause && this.$refs['x-audio'].audioPause()
         })
-        item.play = false
       } else {
         this.$nextTick(() => {
-          this.$refs['x-audio'].audioPlay && this.$refs['x-audio'].audioPlay()
+          this.$refs['x-audio'].handleBtnClick && this.$refs['x-audio'].handleBtnClick()
         })
-        item.play = true
       }
     }
   }

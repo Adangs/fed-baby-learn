@@ -1,7 +1,7 @@
 <template>
 	<view class="audio-warp" @click="handleBtnClick">
 		<view class="cover-warp" :class="{ hasbg: !poster }">
-			<image :src="poster" v-if="poster" class="cover-img"></image>
+      <view v-if="poster" :style="[styles]" class="_poster" />
 			<view class="play-btn" :class="{ pause: play }"></view>
 		</view>
 		<view class="audio-con">
@@ -38,7 +38,7 @@ export default {
 		},
 		poster: {
 			type: String,
-			default: ''
+			default: '/static/images/144x144.png'
 		},
 		name: {
 			type: String,
@@ -61,6 +61,13 @@ export default {
 			default: false
 		}
 	},
+  computed:{
+    styles() {
+      return {
+        'background-image': `url(${this.poster})`
+      }
+    }
+  },
 	data() {
 		return {
 			audioTimeUpdate: '00:00',
@@ -78,29 +85,28 @@ export default {
 			this.$emit('update:play', !this.play);
 		},
 		contextInit() {
-			let that = this;
 			let innerAudioContext = uni.createInnerAudioContext();
-			innerAudioContext.autoplay = that.autoplay;
-			innerAudioContext.src = that.src;
-			innerAudioContext.loop = that.loop;
-			innerAudioContext.obeyMuteSwitch = that.obeyMuteSwitch;
+			innerAudioContext.autoplay = this.autoplay;
+			innerAudioContext.src = this.src;
+			innerAudioContext.loop = this.loop;
+			innerAudioContext.obeyMuteSwitch = this.obeyMuteSwitch;
 			innerAudioContext.onPlay(() => {
-				that.audioTimeUpdate = sToHs(Math.floor(innerAudioContext.currentTime));
-				that.audioPlay();
+        this.audioTimeUpdate = sToHs(Math.floor(innerAudioContext.currentTime));
+        this.audioPlay();
 				console.log('开始播放');
 			});
-			innerAudioContext.onTimeUpdate(function() {
-				that.audioTimeUpdate = sToHs(Math.floor(innerAudioContext.currentTime));
+			innerAudioContext.onTimeUpdate(() => {
+        this.audioTimeUpdate = sToHs(Math.floor(innerAudioContext.currentTime));
 			});
-			innerAudioContext.onEnded(function() {
-				that.audioPause();
+			innerAudioContext.onEnded(() => {
+        this.audioPause();
 			});
 
 			innerAudioContext.onError((res) => {
 
 			});
-			that.innerAudioContext = innerAudioContext
-			that.$emit('update:play', false);
+      this.innerAudioContext = innerAudioContext
+      this.$emit('update:play', false);
 		}
 	},
 	watch: {
@@ -148,10 +154,14 @@ export default {
 	&.hasbg {
 		background-color: #e6e6e6;
 	}
-	.cover-img {
+	._poster {
 		width: 100%;
 		height: 100%;
-	}
+    opacity: .2;
+    background: no-repeat center center;
+    background-size: cover;
+    backdrop-filter: blur(6px);
+  }
 	.play-btn {
 		position: absolute;
 		left: 50%;
