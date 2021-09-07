@@ -43,6 +43,11 @@ export default {
   computed: {},
   watch: {},
   onLoad () {
+    wx.setInnerAudioOption({
+      mixWithOther: true,
+      obeyMuteSwitch: false,
+      speakerOn: true
+    })
     this.getList()
   },
   onHide() {
@@ -61,11 +66,6 @@ export default {
       })
     },
     onPlay(item) {
-      wx.setInnerAudioOption({
-        mixWithOther: true,
-        obeyMuteSwitch: false,
-        speakerOn: true
-      })
       if (this.current && this.current.url !== item.url) {
         this.current.play = false
         this.$nextTick(() => {
