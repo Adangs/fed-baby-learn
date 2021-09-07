@@ -47,16 +47,23 @@ export default {
   },
   computed: {},
   watch: {},
-  created () {
+  onLoad () {
     this.audio = uni.createInnerAudioContext()
     this.audio.autoplay = true
     // this.audio.onPlay(() => {
     //   console.log('开始播放')
     // })
   },
+  onHide() {
+    if (this.audio && this.audio.destroy) {
+      this.audio.destroy()
+    }
+  },
   methods: {
     onPlay(item) {
       if (this.current && this.current.url !== item.url) {
+        this.current.play = false
+        this.audio.stop()
         this.current = item
       } else {
         this.current = item
