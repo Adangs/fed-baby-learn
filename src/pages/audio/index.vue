@@ -14,17 +14,22 @@
         </view>
       </view>
     </view>
+    <div v-if="current" class="audio">
+      <x-audio ref="x-audio" :play.sync="current.play" :src="current.url" :name="current.title" :author="current.category" />
+    </div>
   </view>
 </template>
 
 <script>
 import XNavigationBar from '@/components/x-navigation-bar'
 import XIcon from '@/components/x-icon'
+import XAudio from '@/components/x-audio'
 
 export default {
   name: 'Print',
   components: {
     XIcon,
+    XAudio,
     XNavigationBar
   },
   props: {},
@@ -33,7 +38,7 @@ export default {
     lists: [{
       category: '语文',
       url: 'https://alicdn.madaomall.com/static/videos/2021/YW-001.mp3',
-      title: '弟子规朗诵',
+      title: '弟子规',
       play: false
     }, {
       category: '英语',
@@ -41,6 +46,7 @@ export default {
       title: '英语课程教科书一年级 A',
       play: false
     }],
+    play: false,
     audio: null,
     current: null
   };
@@ -48,8 +54,9 @@ export default {
   computed: {},
   watch: {},
   onLoad () {
-    this.audio = uni.createInnerAudioContext()
-    this.audio.autoplay = true
+    // this.audio = uni.createInnerAudioContext()
+    // this.audio.autoplay = true
+    // this.audio.obeyMuteSwitch = false
     // this.audio.onPlay(() => {
     //   console.log('开始播放')
     // })
@@ -70,17 +77,22 @@ export default {
     onPlay(item) {
       if (this.current && this.current.url !== item.url) {
         this.current.play = false
-        this.audio.stop()
+        this.$nextTick(() => {
+          this.$refs['x-audio'].audioPause && this.$refs['x-audio'].audioPause()
+        })
         this.current = item
       } else {
         this.current = item
       }
-      this.audio.src = this.current.url
       if (this.current.play) {
-        this.audio.pause()
+        this.$nextTick(() => {
+          this.$refs['x-audio'].audioPause && this.$refs['x-audio'].audioPause()
+        })
         item.play = false
       } else {
-        this.audio.play()
+        this.$nextTick(() => {
+          this.$refs['x-audio'].audioPlay && this.$refs['x-audio'].audioPlay()
+        })
         item.play = true
       }
     }
@@ -91,7 +103,8 @@ export default {
 <style lang="scss">
   page{ background-color: #fafafa;}
   .m-list{
-    .ul{ width: 100%; padding: 10px; }
+    height: 100vh; display: flex; flex-direction: column;
+    .ul{ width: 100%; padding: 10px; flex: 1;}
     .li{ padding: 10px;}
     .item{
       display: flex; align-items: center; background-color: #fff; padding: 5px;
@@ -101,5 +114,6 @@ export default {
       .dl{ flex: 1; padding-left: 15px;}
       .dd{ font-size: 24px; color: #999; padding-top: 5px;}
     }
+    .audio{ height: 150px;}
   }
 </style>
