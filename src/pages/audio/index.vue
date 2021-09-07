@@ -61,6 +61,11 @@ export default {
       })
     },
     onPlay(item) {
+      uni.setInnerAudioOption({
+        mixWithOther: true,
+        obeyMuteSwitch: false,
+        speakerOn: true
+      })
       if (this.current && this.current.url !== item.url) {
         this.current.play = false
         this.$nextTick(() => {

@@ -55,10 +55,6 @@ export default {
 		loop: {
 			type: Boolean,
 			default: false
-		},
-		obeyMuteSwitch: {
-			type: Boolean,
-			default: false
 		}
 	},
   computed:{
@@ -89,7 +85,7 @@ export default {
 			innerAudioContext.autoplay = this.autoplay;
 			innerAudioContext.src = this.src;
 			innerAudioContext.loop = this.loop;
-			innerAudioContext.obeyMuteSwitch = falseh;
+			innerAudioContext.obeyMuteSwitch = false;
 			innerAudioContext.onPlay(() => {
         this.audioTimeUpdate = sToHs(Math.floor(innerAudioContext.currentTime));
         this.audioPlay();
@@ -124,11 +120,6 @@ export default {
 	},
 	created() {
 		this.contextInit();
-		uni.setInnerAudioOption({
-      mixWithOther: true,
-      obeyMuteSwitch: false,
-      speakerOn: true
-    })
 	},
 	beforeDestroy() {
 		this.innerAudioContext.destroy();
