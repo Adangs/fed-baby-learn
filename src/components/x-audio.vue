@@ -38,7 +38,7 @@ export default {
 		},
 		poster: {
 			type: String,
-			default: '/static/images/144x144.png'
+			default: ''
 		},
 		name: {
 			type: String,
@@ -152,7 +152,7 @@ export default {
 	width: 150px;
 	height: 100%;
 	&.hasbg {
-		background-color: #e6e6e6;
+		background-color: #ddd;
 	}
 	._poster {
 		width: 100%;
