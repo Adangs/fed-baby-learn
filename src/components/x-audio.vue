@@ -120,9 +120,6 @@ export default {
 	},
 	created() {
 		this.contextInit();
-	},
-	beforeDestroy() {
-		this.innerAudioContext.destroy();
 	}
 };
 </script>

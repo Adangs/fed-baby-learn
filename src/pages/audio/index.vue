@@ -48,6 +48,9 @@ export default {
       obeyMuteSwitch: false,
       speakerOn: true
     })
+    wx.setKeepScreenOn({
+      keepScreenOn: true
+    })
     this.getList()
   },
   onHide() {
