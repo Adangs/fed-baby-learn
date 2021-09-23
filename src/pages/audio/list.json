@@ -4,8 +4,53 @@
   "title": "弟子规",
   "play": false
 }, {
-  "category": "英语",
-  "url": "https://alicdn.madaomall.com/static/videos/2021/YY-001.wav",
-  "title": "英语课程教科书一年级 A",
+    "category": "英语",
+    "url": "https://alicdn.madaomall.com/static/videos/2021/YY-001.wav",
+    "title": "英语课程教科书一年级 A",
+    "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/YW-002.mp3",
+  "title": "对韵歌",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/YW-003.mp3",
+  "title": "语文园地1",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/YW-004.mp3",
+  "title": "语文园地2",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/YW-005.mp3",
+  "title": "语文园地3",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/YW-006.mp3",
+  "title": "语文园地4",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/秋天.mp3",
+  "title": "秋天",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/小小的船.mp3",
+  "title": "小小的船",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/江南.mp3",
+  "title": "江南",
+  "play": false
+}, {
+  "category": "语文",
+  "url": "https://alicdn.madaomall.com/static/videos/2021/四季.mp3",
+  "title": "四季",
   "play": false
 }]
