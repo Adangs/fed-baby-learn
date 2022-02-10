@@ -95,8 +95,8 @@ export default {
 <style lang="scss">
   page{ background-color: #fafafa;}
   .m-list{
-    height: 100vh; display: flex; flex-direction: column;
-    .ul{ width: 100%; padding: 10px; flex: 1;}
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    .ul{ width: 100%; padding: 10px; flex: 1; overflow: auto;}
     .li{ padding: 10px;}
     .item{
       display: flex; align-items: center; background-color: #fff; padding: 5px;
