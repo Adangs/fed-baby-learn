@@ -11,7 +11,7 @@
       <view class="li"></view>
       <view class="li"></view>
       <view class="topic">
-        <view v-for="(item, index) in current" :key="index" :class="{'symbol': isTypeof(item) === 'string'}">{{ item }}</view>
+        <view v-for="(item, index) in current" :key="index" :class="{'symbol': isTypeof(item) === 'string'}">{{ String(item).replace(/\*/gi, '×').replace(/\//gi, '÷') }}</view>
         <view class="symbol">=</view>
         <view class="answer">{{ answer }}</view>
       </view>
@@ -19,9 +19,9 @@
       <view class="header flex" :style="'top:' + statusBarHeight + 'px'">
         <view class="flex-item">
           <view class="inline-block">
-            <picker :value="diffIndex" :range="difficulty" range-key="name" @change="onChangeDiff">
+            <picker :value="diffIndex" :range="currentDifficulty" range-key="name" @change="onChangeDiff">
               <view class="flex">
-                <text>{{ difficulty[diffIndex].name }}</text>
+                <text>{{ currentDifficulty[diffIndex].name }}</text>
                 <x-icon name="icon-040" size="22" color="#999" />
               </view>
             </picker>
@@ -37,6 +37,13 @@
               <x-icon name="icon-019" size="50" />
             </picker>
             <view class="name">{{max}}以内</view>
+          </view>
+        </view>
+        <!--加减乘除切换-->
+        <view class="icon algorithm">
+          <view class="x-icon" @click="handleAlgorithm">
+            <x-icon name="icon-015" size="50" />
+            <view class="name">{{ algorithmName }}</view>
           </view>
         </view>
         <!--数量-->
@@ -61,19 +68,6 @@
         <view class="timer">
           <x-timer ref="x-timer" @end="onTimerEnd"></x-timer>
         </view>
-      </view>
-    </view>
-    <!--结果列表-->
-    <view class="result">
-      <view class="first">
-        <view class="item" @click="onAnswer(0)">0</view>
-      </view>
-      <view class="ul">
-        <template v-for="item in maxResult" >
-          <view v-if="item !== 0" :key="item" class="li">
-            <view class="item" @click="onAnswer(item)">{{ item }}</view>
-          </view>
-        </template>
       </view>
     </view>
     <!--数字键盘-->
@@ -141,19 +135,19 @@
         statusBarHeight: uni.getSystemInfoSync().statusBarHeight,
         range: [{
           value: 10,
-          name: '10以内加减法'
+          name: '10以内'
         }, {
           value: 20,
-          name: '20以内加减法'
+          name: '20以内'
         }, {
           value: 30,
-          name: '30以内加减法'
+          name: '30以内'
         }, {
           value: 50,
-          name: '50以内加减法'
+          name: '50以内'
         }, {
           value: 100,
-          name: '100以内加减法'
+          name: '100以内'
         }],
         endList: [{
           value: 10,
@@ -181,6 +175,10 @@
           value: 9,
           name: 'A ± B ± C ± D ± E ='
         }],
+        takeRemove: [{
+          value: 3,
+          name: 'A ×(÷) B ='
+        }],
         diffIndex: uni.getStorageSync('storage-compute-diff') || 0,
         max: uni.getStorageSync('storage-compute-max') || 10,
         end: uni.getStorageSync('storage-compute-end') || 10,
@@ -194,7 +192,8 @@
         timeCost: null,
         isReady: true,
         currentHistory: null,
-        answer: '?'
+        answer: '?',
+        algorithmType: true
       }
     },
     computed: {
@@ -236,6 +235,12 @@
       // 缓存计时数据key
       historyKey() {
         return `${this.diffIndex}-${this.rangeIndex}-${this.endIndex}`
+      },
+      algorithmName() {
+        return this.algorithmType ? '加减' : '乘除'
+      },
+      currentDifficulty() {
+        return this.algorithmType ? this.difficulty : this.takeRemove
       }
     },
     watch: {},
@@ -324,8 +329,9 @@
       },
       // 切换题目数
       onChangeDiff({ detail }) {
-        const find = this.difficulty[detail.value]
+        const find = this.currentDifficulty[detail.value]
         this.diffIndex = +detail.value
+        this.answer = '?'
         uni.setStorageSync('storage-compute-diff', this.diffIndex)
         uni.showToast({
           title: `切换为${find.name}`
@@ -335,6 +341,7 @@
       // 开始生成题目
       onSend() {
         const item = this.getTopic()
+        console.log(item)
         // 去重
         // console.log(this.list.length)
         if (this.list.some(s => {
@@ -349,7 +356,7 @@
       },
       // 生成单个题目
       getTopic() {
-        const len = this.difficulty[this.diffIndex].value
+        const len = this.currentDifficulty[this.diffIndex].value
         const arr = []
         for (let i = 0; i < len; i++) {
           const round = Math.round(Math.random())
@@ -357,62 +364,48 @@
             arr.push(this.getNumber())
           } else {
             if (i % 2 !== 0) {
-              const sign = ['+', '-'][round]
+              let sign = ['+', '-'][round]
+              if (!this.algorithmType) {
+                sign = ['*', '/'][round]
+              }
               arr.push(sign)
             } else {
-              let sum
-              if (arr.length % 2 === 0) {
-                sum = evaluate([...arr, 0].join(''))
+              // +-
+              if (this.algorithmType) {
+                let sum
+                if (arr.length % 2 === 0) {
+                  sum = evaluate([...arr, 0].join(''))
+                } else {
+                  sum = evaluate(arr.join(''))
+                }
+                arr.push(this.getNumber(arr[i - 1], sum))
               } else {
-                sum = evaluate(arr.join(''))
+                // ×÷
+                arr.push(this.getNumber(arr[i - 1], 0, arr[i - 2]))
               }
-              arr.push(this.getNumber(arr[i - 1], sum))
             }
           }
         }
         return arr
       },
       // 生成单个值
-      getNumber(sign = '+', a = 0) {
+      getNumber(sign = '+', a = 0, one) {
         if (sign === '+') {
           return Math.round(Math.random() * (this.max - a))
-        } else {
-          return Math.round(Math.random() * a)
-        }
-      },
-      // 答题
-      onAnswer(val) {
-        const answer = evaluate(this.current.join(''))
-        console.log(answer)
-        if (answer === val) {
-          // uni.showToast({
-          //   title: '回答正确',
-          //   duration: 800
-          // })
-          if (this.count.start < this.count.end) {
-            this.count.start++
-            if (this.count.start === this.count.end) {
-              // 计时结束
-              const timer = this.$refs['x-timer']
-              if (timer) {
-                timer.onStop()
-              }
-              // 更新历史记录
-              this.setHistory()
-              console.log('答题结束')
+        } else if (sign === '/') {
+          const max = this.max
+          function fun() {
+            const val = Math.round(Math.random() * max)
+            if (one % val === 0) {
+              return val
+            } else {
+              return fun()
             }
           }
+          return fun()
         } else {
-          this.error++
-          // uni.showToast({
-          //   icon: 'none',
-          //   title: '错误，再想想',
-          //   duration: 800
-          // })
-          // 错误进行震动提示
-          uni.vibrateShort({
-            type: 'light'
-          })
+          const val = this.algorithmType ? a : this.max
+          return Math.round(Math.random() * val)
         }
       },
       // 设置答案
@@ -431,6 +424,7 @@
       // 判断答案
       ifAnswer() {
         const val = evaluate(this.current.join(''))
+        console.log(val)
         const answer = Number(this.answer)
         if (answer === val) {
           uni.showToast({
@@ -452,6 +446,7 @@
             }
           }
         } else if (answer > val) {
+          this.error++
           this.answer = '?'
           uni.showToast({
             icon: 'none',
@@ -496,6 +491,17 @@
           arr.push(`${item.millisecond}`)
         }
         return arr.join('')
+      },
+      // 切换算法
+      handleAlgorithm() {
+        this.algorithmType = !this.algorithmType
+        this.diffIndex = 0
+        this.answer = '?'
+        uni.setStorageSync('storage-compute-diff', this.diffIndex)
+        uni.showToast({
+          title: `切换成${this.algorithmName}法`
+        })
+        this.onReadInit()
       }
     }
   };
@@ -557,6 +563,7 @@
           text-align: center;
           .x-icon{ width: 100%;}
           .name{ font-size: 22px; text-align: center; color: #999; padding-top: 5px;}
+          & + .icon{ margin-left: 20px;}
         }
         .timer{ position: absolute; left: 50%; bottom: 130px; transform: translate(-50%, 0);}
       }
@@ -589,19 +596,6 @@
           .topic{ font-size: 75px;}
           .answer{ width: 75px;}
         }
-      }
-    }
-    .result{
-      font-size: 58px; flex: 1; overflow: auto; padding: 10px; display: none;
-      .ul{ display: flex; flex-wrap: wrap; }
-      .li{ padding: 10px; width: 20%;}
-      .item{
-        background-color: #f8f8f8; height: 100px; line-height: 100px; text-align: center;
-        &:active{ background-color: #eee;}
-      }
-      .first{
-        padding: 10px;
-        .item{ width: 100%;}
       }
     }
     // 数据键盘
