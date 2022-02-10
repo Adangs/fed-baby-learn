@@ -32,7 +32,7 @@
             <view class="icon">
               <x-icon name="icon-044" color="#555" />
             </view>
-            <view>v1.2.9</view>
+            <view>v{{version}}</view>
           </view>
         </x-button>
       </view>
@@ -54,12 +54,18 @@
     },
     props: {},
     data() {
-      return {};
+      return {
+        version: '1.3.0'
+      };
     },
     computed: {},
     watch: {},
     onLoad() {
-
+      try {
+        this.version = wx.getAccountInfoSync().miniProgram.version || '1.3.0';
+      } catch (e) {
+        console.warn(e);
+      }
     },
 
     onShareAppMessage() {

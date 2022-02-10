@@ -341,7 +341,7 @@
       // 开始生成题目
       onSend() {
         const item = this.getTopic()
-        console.log(item)
+        // console.log(item)
         // 去重
         // console.log(this.list.length)
         if (this.list.some(s => {
