@@ -153,6 +153,9 @@
           value: 10,
           name: '一组10题'
         }, {
+          value: 20,
+          name: '一组20题'
+        }, {
           value: 30,
           name: '一组30题'
         }, {
@@ -161,6 +164,12 @@
         }, {
           value: 100,
           name: '一组100题'
+        }, {
+          value: 500,
+          name: '一组500题'
+        }, {
+          value: 1000,
+          name: '一组1000题'
         }],
         difficulty: [{
           value: 3,
