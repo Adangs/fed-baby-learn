@@ -1,66 +1,66 @@
 {
-  "name" : "浠瑶",
-  "appid" : "__UNI__5CB5039",
-  "description" : "",
-  "versionName" : "1.0.0",
-  "versionCode" : "100",
-  "transformPx" : true,
-  "uniStatistics" : {
-    "enable" : false
-  },
-  "mp-weixin" : {
-    "appid" : "wxe909acd671d1a5a1",
-    "setting" : {
-      "urlCheck" : false,
-      "es6" : true,
-      "postcss" : true,
-      "minified" : true
+    "name" : "浠瑶",
+    "appid" : "__UNI__5CB5039",
+    "description" : "",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : true,
+    "uniStatistics" : {
+        "enable" : false
     },
-    "usingComponents" : true
-  },
-  "mp-alipay" : {
-    "appid" : "",
-    "usingComponents" : true
-  },
-  "mp-baidu" : {
-    "appid" : "",
-    "usingComponents" : true
-  },
-  "mp-toutiao" : {
-    "appid" : "",
-    "setting" : {
-      "urlCheck" : false,
-      "es6" : true,
-      "postcss" : true,
-      "minified" : true
+    "mp-weixin" : {
+        "appid" : "wxe909acd671d1a5a1",
+        "setting" : {
+            "urlCheck" : false,
+            "es6" : true,
+            "postcss" : true,
+            "minified" : true
+        },
+        "usingComponents" : true
     },
-    "usingComponents" : true
-  },
-  "mp-qq" : {
-    "setting" : {
-      "es6" : true,
-      "postcss" : true,
-      "minified" : true,
-      "urlCheck" : false
-    }
-  },
-  "app-plus" : {
-    "distribute" : {
-      "icons" : {
-        "ios" : {
-          "ipad" : {
-            "app" : "assets/images/76x76.png",
-            "app@2x" : "assets/images/152x152.png",
-            "proapp@2x" : "assets/images/167x167.png",
-            "spotlight" : "assets/images/40x40.png",
-            "spotlight@2x" : "assets/images/80x80.png",
-            "settings" : "assets/images/29x29.png",
-            "settings@2x" : "assets/images/58x58.png",
-            "notification" : "assets/images/20x20.png",
-            "notification@2x" : "assets/images/40x40.png"
-          }
+    "mp-alipay" : {
+        "appid" : "",
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "appid" : "",
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "appid" : "",
+        "setting" : {
+            "urlCheck" : false,
+            "es6" : true,
+            "postcss" : true,
+            "minified" : true
+        },
+        "usingComponents" : true
+    },
+    "mp-qq" : {
+        "setting" : {
+            "es6" : true,
+            "postcss" : true,
+            "minified" : true,
+            "urlCheck" : false
         }
-      }
+    },
+    "app-plus" : {
+        "distribute" : {
+            "icons" : {
+                "ios" : {
+                    "ipad" : {
+                        "app" : "assets/images/76x76.png",
+                        "app@2x" : "assets/images/152x152.png",
+                        "proapp@2x" : "assets/images/167x167.png",
+                        "spotlight" : "assets/images/40x40.png",
+                        "spotlight@2x" : "assets/images/80x80.png",
+                        "settings" : "assets/images/29x29.png",
+                        "settings@2x" : "assets/images/58x58.png",
+                        "notification" : "assets/images/20x20.png",
+                        "notification@2x" : "assets/images/40x40.png"
+                    }
+                }
+            }
+        }
     }
-  }
 }

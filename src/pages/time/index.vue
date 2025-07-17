@@ -236,6 +236,7 @@ export default {
       const diff = new Date(`${yyyy}/${MM}/${dd} ${hh}:${mm}:00`)
       const res = this.timeDiff(current, diff)
       this.list.unshift(res)
+      this.handleClear()
     },
     handleClear() {
       this.time = {
