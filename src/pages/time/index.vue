@@ -72,7 +72,7 @@ import XNavigationBar from '@/components/x-navigation-bar'
 import XButton from '@/components/x-button'
 import Tools from '@/utils/x-filters'
 export default {
-  name: 'Time',
+  name: 'TimeDiff',
   components: {
     XNavigationBar,
     XButton
