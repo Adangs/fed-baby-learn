@@ -244,6 +244,7 @@ export default {
         m1: '',
         m2: '',
       }
+      this.setFocus()
     }
   }
 };
