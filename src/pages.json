@@ -9,6 +9,8 @@
     "path": "pages/print/index"
   },{
     "path": "pages/audio/index"
+  },{
+    "path": "pages/time/index"
   }],
   "subPackages": [{
     "root": "packages/print",

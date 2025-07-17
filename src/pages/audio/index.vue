@@ -26,7 +26,7 @@ import XIcon from '@/components/x-icon'
 import XAudio from '@/components/x-audio'
 
 export default {
-  name: 'Print',
+  name: 'Audio',
   components: {
     XIcon,
     XAudio,

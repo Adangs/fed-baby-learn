@@ -3,7 +3,7 @@
     <view class="logo">
       <x-image src="/static/images/144x144.png" />
     </view>
-    <view class="ul">
+    <view class="ul x-grid span-3">
       <view class="li">
         <view class="item" @click="onLiteracy">
           <text>识字</text>
@@ -22,6 +22,11 @@
       <view class="li">
         <view class="item" @click="onNavigateTo('/pages/audio/index')">
           <text>音频</text>
+        </view>
+      </view>
+      <view class="li">
+        <view class="item" @click="onNavigateTo('/pages/time/index')">
+          <text>时间计算</text>
         </view>
       </view>
     </view>
@@ -115,13 +120,12 @@
     position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); display: flex; padding-bottom: 150px; width: 100%;
     .logo{ position: absolute; width: 144px; height: 144px; left: 50%; top: -200px; transform: translate3d(-50%, 0, 0);}
     .ul{
-      display: flex; flex-wrap: wrap; width: 100%; padding: 0 50px;
+      width: 100%; padding: 0 50px; gap: 40px;
     }
-    .li{ width: 33.333%; padding: 20px;}
     .item{
-      width: 150px; height: 150px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center; margin: 0 auto;
+      width: 100%; height: 150px; background: #fafafa; border-radius: 20px; border: 2px solid #ddd; text-align: center; display: flex; align-items: center; margin: 0 auto;
       &:active{ opacity: .8;}
-      text{ display: block; flex: 1; font-size: 40px;}
+      text{ display: block; flex: 1; font-size: 36px;}
     }
     .version{
       position: absolute; bottom: 20px; color: #aaa; width: 100%; text-align: center; font-size: 22px;

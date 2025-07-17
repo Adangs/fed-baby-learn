@@ -28,6 +28,18 @@
   scroll-view,
   navigator { box-sizing: border-box; }
   .inline-block{ display: inline-block;}
+  .x-grid{
+    display: grid;
+    &.span-1{ grid-template-columns: repeat(1, minmax(0px, 1fr));}
+    &.span-2{ grid-template-columns: repeat(2, minmax(0px, 1fr));}
+    &.span-3{ grid-template-columns: repeat(3, minmax(0px, 1fr));}
+    &.span-4{ grid-template-columns: repeat(4, minmax(0px, 1fr));}
+    &.span-5{ grid-template-columns: repeat(5, minmax(0px, 1fr));}
+    &.span-6{ grid-template-columns: repeat(6, minmax(0px, 1fr));}
+    &.span-7{ grid-template-columns: repeat(7, minmax(0px, 1fr));}
+    &.span-8{ grid-template-columns: repeat(8, minmax(0px, 1fr));}
+    &.span-9{ grid-template-columns: repeat(9, minmax(0px, 1fr));}
+  }
   /*==== flex style ====*/
   .flex {
     display: flex;
