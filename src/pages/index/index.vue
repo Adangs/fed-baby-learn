@@ -10,18 +10,23 @@
         </view>
       </view>
       <view class="li">
+        <view class="item" @click="onCompute">
+          <text>心算</text>
+        </view>
+      </view>
+      <view class="li">
         <view class="item" @click="onPrint">
           <text>打印</text>
         </view>
       </view>
       <view class="li">
-        <view class="item" @click="onNavigateTo('/pages/time/index')">
-          <text>时间计算</text>
+        <view class="item" @click="onNavigateTo('/pages/audio/index')">
+          <text>音频</text>
         </view>
       </view>
       <view class="li">
-        <view class="item" @click="onNavigateTo('/pages/audio/index')">
-          <text>音频</text>
+        <view class="item" @click="onNavigateTo('/pages/time/index')">
+          <text>时间计算</text>
         </view>
       </view>
     </view>
