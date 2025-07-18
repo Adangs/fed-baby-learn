@@ -112,18 +112,17 @@ export default {
 
   },
   watch: {},
-  onLoad () {
+  onLoad () {},
+  onShow() {
     this.timeInterval = setInterval(() => {
       this.currentTime = Tools.formatDate(new Date(), 'MM月dd日 hh时mm分ss秒');
     }, 1000)
-
-    console.log(this.list)
   },
   onHide() {
-    clearInterval(this.timeInterval)
+
   },
   onUnload() {
-
+    clearInterval(this.timeInterval)
   },
   methods: {
     formatDate(a, b) {
