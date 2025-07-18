@@ -43,26 +43,36 @@
         <x-button class="is-primary" type="primary" @click="handleSubmit">计算</x-button>
       </view>
 
-      <view class="title">
-        计算记录
-      </view>
-      <view class="list">
-        <view v-for="(item, index) in list" :key="index" class="item">
-          <text class="name">{{ index + 1 }}、相差：</text>
-          <template v-if="item.days">
-            <text class="value">item.days</text>
-            <text>天</text>
-          </template>
-          <template v-if="item.hours">
-            <text class="value">{{ item.hours }}</text>
-            <text>小时</text>
-          </template>
-          <text class="value">{{ item.minutes }}</text>
-          <text>分钟</text>
+      <template v-if="list && list.length">
+        <view class="title">
+          计算记录
         </view>
-      </view>
+        <view class="list">
+          <view v-for="(item, index) in list" :key="index" class="item">
+            <view class="name">
+              {{ index + 1 }}、
+            </view>
+            <text class="value">{{ formatDate(item.current, 'hh:mm') }}</text>
+            <text>与</text>
+            <text class="value">{{ formatDate(item.diffTime, 'hh:mm') }}</text>
+            <text>相差</text>
+            <view class="dd">
+              <template v-if="item.days">
+                <text class="value">item.days</text>
+                <text>天</text>
+              </template>
+              <template v-if="item.hours">
+                <text class="value">{{ item.hours }}</text>
+                <text>小时</text>
+              </template>
+              <text class="value">{{ item.minutes }}</text>
+              <text>分钟</text>
+            </view>
+          </view>
+        </view>
 
-      <view v-if="list && list.length" class="remove" @click="list = []">清空记录</view>
+        <view class="remove" @click="handleClearHistory">清空记录</view>
+      </template>
     </view>
   </view>
 </template>
@@ -83,10 +93,10 @@ export default {
       timeInterval: null,
       currentTime: Tools.formatDate(new Date(), 'MM月dd日 hh时mm分ss秒'),
       time: {
-        h1: '',
-        h2: '',
-        m1: '',
-        m2: '',
+        h1: '1',
+        h2: '1',
+        m1: '1',
+        m2: '1',
       },
       focus: {
         h1: false,
@@ -95,7 +105,7 @@ export default {
         m2: false
       },
       backspace: 0,
-      list: []
+      list: uni.getStorageSync('storage-time-history') || []
     };
   },
   computed: {
@@ -106,6 +116,8 @@ export default {
     this.timeInterval = setInterval(() => {
       this.currentTime = Tools.formatDate(new Date(), 'MM月dd日 hh时mm分ss秒');
     }, 1000)
+
+    console.log(this.list)
   },
   onHide() {
     clearInterval(this.timeInterval)
@@ -114,6 +126,9 @@ export default {
 
   },
   methods: {
+    formatDate(a, b) {
+      return Tools.formatDate(a, b)
+    },
     handleInput(event) {
       // console.log(event)
       const { target, detail } = event
@@ -181,6 +196,10 @@ export default {
           }
           break;
       }
+
+      uni.vibrateShort({
+        type: 'light'
+      })
     },
     handleFocus(event) {
       const { target } = event
@@ -189,18 +208,16 @@ export default {
       this.setFocus(key)
     },
     handleBlur(event) {
-      const { target } = event
-      const { dataset } = target
-      const key = dataset.name
-      this.focus[key] = false
+      // const { target } = event
+      // const { dataset } = target
+      // const key = dataset.name
+      // this.focus[key] = false
       this.backspace = 0
     },
     setFocus(name) {
-      setTimeout(() => {
-        for (const key in this.focus) {
-          this.focus[key] = key === name
-        }
-      }, 100)
+      for (const key in this.focus) {
+        this.focus[key] = key === name
+      }
       this.backspace = 0
     },
     timeDiff(date1, date2) {
@@ -233,10 +250,18 @@ export default {
       const yyyy = Tools.formatDate(new Date(), 'yyyy')
       const MM = Tools.formatDate(new Date(), 'MM')
       const dd = Tools.formatDate(new Date(), 'dd')
-      const diff = new Date(`${yyyy}/${MM}/${dd} ${hh}:${mm}:00`)
-      const res = this.timeDiff(current, diff)
-      this.list.unshift(res)
+      const diffTime = new Date(`${yyyy}/${MM}/${dd} ${hh}:${mm}:00`)
+      const res = this.timeDiff(current, diffTime)
+      this.list.unshift({
+        ...res,
+        diffTime: +diffTime,
+        current: +current
+      })
+      uni.setStorageSync('storage-time-history', this.list)
       this.handleClear()
+      uni.vibrateShort({
+        type: 'light'
+      })
     },
     handleClear() {
       this.time = {
@@ -246,13 +271,17 @@ export default {
         m2: '',
       }
       this.setFocus()
+    },
+    handleClearHistory() {
+      uni.removeStorageSync('storage-time-history')
+      this.list = []
     }
   }
 };
 </script>
 
 <style lang="scss">
-  page{ background-color: #fafafa;}
+  page{ background-color: #fefefe;}
   .m-time-content{
     padding: 24px;
     .title{ text-align: center; padding: 10px 0; color: #999;}
@@ -271,8 +300,8 @@ export default {
     .list{
       .item{
         display: flex; align-items: center; font-size: 32rpx; padding: 20px 10px; color: #999;
-        .name{ flex: 1;}
         .value{ color: #111;}
+        .dd{ flex: 1; display: flex; align-items: center; justify-content: flex-end;}
         &:nth-child(odd){
           background: #fff;
         }
