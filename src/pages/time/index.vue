@@ -93,10 +93,10 @@ export default {
       timeInterval: null,
       currentTime: Tools.formatDate(new Date(), 'MM月dd日 hh时mm分ss秒'),
       time: {
-        h1: '1',
-        h2: '1',
-        m1: '1',
-        m2: '1',
+        h1: '',
+        h2: '',
+        m1: '',
+        m2: '',
       },
       focus: {
         h1: false,

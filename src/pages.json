@@ -1,8 +1,6 @@
 {
-	"pages": [{
+  "pages": [{
     "path": "pages/index/index"
-  },{
-    "path": "pages/compute/index"
   },{
     "path": "pages/literacy/index"
   },{
@@ -21,13 +19,13 @@
     }]
   }],
   "globalStyle": {
-      "navigationBarTextStyle": "black",
-      "navigationBarTitleText": "",
-  "navigationBarBackgroundColor": "#fff",
-  "backgroundColor": "#FFF",
-  "navigationStyle": "custom",
-  "enablePullDownRefresh": false,
-  "transparentTitle": "always",
-  "titlePenetrate": "YES"
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#FFF",
+    "navigationStyle": "custom",
+    "enablePullDownRefresh": false,
+    "transparentTitle": "always",
+    "titlePenetrate": "YES"
   }
 }
